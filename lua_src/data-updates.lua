@@ -20,12 +20,8 @@ function add_randovania_tech(param)
         })
 end
 
-add_randovania_tech {
-    name = "randovania-red-a",
-    icon = "__base__/graphics/technology/steel-processing.png",
-    costs = {
-        count = 50,
-        ingredients = {{"automation-science-pack", 1}},
-        time = 5
-    }
-}
+local tech_tree = require("generated.tech-tree")
+
+for _, tech in ipairs(tech_tree) do
+    add_randovania_tech(tech)
+end
