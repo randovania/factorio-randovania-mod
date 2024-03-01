@@ -69,6 +69,7 @@ script.on_event(defines.events.on_research_finished, on_research_finished)
 script.on_init(function()
     local player_tech = game.forces.player.technologies
     for _, tech in ipairs(STARTING_TECH) do
+        -- TODO: this doesn't give the freebies
         player_tech[tech].researched = true
     end
 end)
