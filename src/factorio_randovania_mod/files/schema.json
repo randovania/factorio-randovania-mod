@@ -1,0 +1,99 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "format": "uri"
+        },
+        "configuration_identifier": {
+            "type": "string",
+            "description": "An unique identifier for this configuration. Only save files created with this identifier can be loaded."
+        },
+        "layout_uuid": {
+            "description": "An UUID exposed via a global lua variable",
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "technologies": {
+            "description": "List of custom technologies to create.",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "tech_name": {
+                        "description": "Internal name of the technology",
+                        "type": "string"
+                    },
+                    "locale_name": {
+                        "description": "Name of the technology, added to the locale file.",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Description of the technology, added to the locale file.",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "Factorio filepath for the icon to use",
+                        "type": "string"
+                    },
+                    "cost": {
+                        "description": "How much this technology will cost to research.",
+                        "type": "object",
+                        "properties": {
+                            "count": {
+                                "description": "How many times the laboratory needs to 'craft'",
+                                "type": "integer"
+                            },
+                            "time": {
+                                "description": "How long it takes the laboratory needs to 'craft'",
+                                "type": "integer"
+                            },
+                            "ingredients": {
+                                "description": "Which science packs are required to 'craft'. Always one of each listed.",
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "required": ["count", "time", "ingredients"],
+                        "additionalProperties": false
+                    },
+                    "prerequisites": {
+                        "description": "List of which technologies must be researched before",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "unlocks": {
+                        "description": "List of which technologies are granted when this is researched.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": ["locale_name", "description", "icon", "cost", "prerequisites", "unlocks"]
+            }
+        },
+        "starting_tech": {
+            "description": "List of technologies that you start the game with",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    },
+    "required": [
+        "configuration_identifier",
+        "layout_uuid",
+        "technologies",
+        "starting_tech"
+    ],
+    "additionalProperties": false,
+    "$defs": {
+    }
+}

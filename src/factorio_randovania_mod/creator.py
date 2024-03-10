@@ -1,9 +1,9 @@
-
-
 import configparser
 from pathlib import Path
 import shutil
 import typing
+
+from factorio_randovania_mod.configuration import Configuration
 
 
 def wrap_array_pretty(data: list) -> str:
@@ -17,7 +17,10 @@ def wrap(data: typing.Any, indent: str = "") -> str:
     if isinstance(data, dict):
         return (
             "{\n"
-            + "\n".join(f"{indent}    {key} = {wrap(value, f'{indent}    ')}," for key, value in data.items())
+            + "\n".join(
+                f"{indent}    {key} = {wrap(value, f'{indent}    ')},"
+                for key, value in data.items()
+            )
             + f"\n{indent}}}"
         )
 
@@ -36,7 +39,7 @@ def wrap(data: typing.Any, indent: str = "") -> str:
 template_path = Path(__file__).parent.joinpath("lua_src")
 
 
-def create(factorio_path: Path, patch_data: dict, output_folder: Path) -> None:
+def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) -> None:
     output_path = output_folder.joinpath("randovania-layout")
     shutil.rmtree(output_path, ignore_errors=True)
 
@@ -49,7 +52,8 @@ def create(factorio_path: Path, patch_data: dict, output_folder: Path) -> None:
 
     tech_tree_lua = []
     local_unlock_lines = ["return {"]
-    for tech_name, tech in patch_data["technologies"].items():
+    for tech in patch_data["technologies"]:
+        tech_name = tech["tech_name"]
         locale["technology-name"][tech_name] = tech["locale_name"]
         locale["technology-description"][tech_name] = tech["description"]
 
@@ -62,7 +66,9 @@ def create(factorio_path: Path, patch_data: dict, output_folder: Path) -> None:
                     "time": tech["cost"]["time"],
                     "ingredients": [[it, 1] for it in tech["cost"]["ingredients"]],
                 },
-                "prerequisites": tech["prerequisites"] if tech["prerequisites"] else None,
+                "prerequisites": tech["prerequisites"]
+                if tech["prerequisites"]
+                else None,
                 "replicate": tech["unlocks"][0] if len(tech["unlocks"]) == 1 else None,
             }
         )
@@ -72,8 +78,12 @@ def create(factorio_path: Path, patch_data: dict, output_folder: Path) -> None:
     local_unlock_lines.append("}")
 
     shutil.copytree(template_path, output_path)
-    output_path.joinpath("generated", "tech-tree.lua").write_text("return " + wrap_array_pretty(tech_tree_lua))
-    output_path.joinpath("generated", "local-unlocks.lua").write_text("\n".join(local_unlock_lines))
+    output_path.joinpath("generated", "tech-tree.lua").write_text(
+        "return " + wrap_array_pretty(tech_tree_lua)
+    )
+    output_path.joinpath("generated", "local-unlocks.lua").write_text(
+        "\n".join(local_unlock_lines)
+    )
     output_path.joinpath("generated", "starting-tech.lua").write_text(
         "return " + wrap_array_pretty(patch_data["starting_tech"])
     )
