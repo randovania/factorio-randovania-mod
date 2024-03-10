@@ -44,10 +44,7 @@ content-type = "text/markdown"
 [project.urls]
 Homepage = "https://github.com/randovania/factorio-randovania-mod"
 
-[tool.setuptools]
-package-dir = {"" = "python_src"}
-
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
-write_to = "python_src/factorio_randovania_mod/version.py"
+write_to = "src/factorio_randovania_mod/version.py"
 git_describe_command = "git describe --dirty --tags --long --match v[0-9]*"
