@@ -1,12 +1,26 @@
+local existing_tree = require("generated.existing-tree-repurpose")
+
 for name, tech in pairs(data.raw["technology"]) do
-    tech.hidden = true
+    if existing_tree[name] then
+        tech.hidden = false
+        tech.enabled = false
+        tech.visible_when_disabled = true
+        tech.prerequisites = existing_tree[name].prerequisites or {}
+        tech.unit = {
+            count = 1,
+            time = 60,
+            ingredients = {{existing_tree[name].science_pack or "impossible-science-pack", 1}}
+        }
+    else
+        tech.hidden = true
+    end
 end
 
 function add_randovania_tech(param)
     local prototype = {
         type = "technology",
         name = param.name,
-        icon_size = 256,
+        icon_size = param.icon_size or 256,
         icon_mipmaps = 4,
         icon = param.icon,
         effects = {},
@@ -14,13 +28,8 @@ function add_randovania_tech(param)
         order = param.order or param.name,
         prerequisites = param.prerequisites,
     }
-    if param.replicate then
-        local replicated = data.raw["technology"][param.replicate]
-        prototype.effects = replicated.effects
-        prototype.localised_name = replicated.localised_name or {"technology-name." .. param.replicate}
-        prototype.localised_description = replicated.localised_description or {"technology-description." .. param.replicate}
-        replicated.effects = {}
-        replicated.enabled = false
+    if param.take_effects_from then
+        prototype.effects = data.raw["technology"][param.take_effects_from].effects
     end
     data:extend { prototype }
 end

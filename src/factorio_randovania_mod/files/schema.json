@@ -37,6 +37,11 @@
                         "description": "Factorio filepath for the icon to use",
                         "type": "string"
                     },
+                    "icon_size": {
+                        "description": "Set the size of the icon image",
+                        "type": "integer",
+                        "default": 256
+                    },
                     "cost": {
                         "description": "How much this technology will cost to research.",
                         "type": "object",

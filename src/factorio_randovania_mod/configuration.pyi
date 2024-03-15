@@ -19,6 +19,7 @@ class ConfigurationTechnologiesItem(typing.TypedDict):
     locale_name: typing.Required[str]
     description: typing.Required[str]
     icon: typing.Required[str]
+    icon_size: typing.NotRequired[int]
     cost: typing.Required[ConfigurationTechnologiesItemCost]
     prerequisites: typing.Required[list[str]]
     unlocks: typing.Required[list[str]]

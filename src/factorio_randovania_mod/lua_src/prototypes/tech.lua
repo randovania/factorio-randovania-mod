@@ -3,13 +3,26 @@ local function make_tech(param)
     param.order = param.order or "d-b"
     param.unit = {
         count = 10,
-        ingredients = {{"automation-science-pack", 1}},
+        ingredients = { { "automation-science-pack", 1 } },
         time = 15
     }
     return param
 end
 
 data:extend {
+    {
+        type = "tool",
+        name = "impossible-science-pack",
+        icon = "__core__/graphics/icons/technology/effect/effect-deconstruction.png",
+        icon_size = 64, icon_mipmaps = 1,
+        subgroup = "science-pack",
+        order = "z[automation-science-pack]",
+        stack_size = 20,
+        durability = 1,
+        durability_description_key = "description.science-pack-remaining-amount-key",
+        durability_description_value = "description.science-pack-remaining-amount-value"
+    },
+
     make_tech {
         name = "long-handed-inserter",
         effects = {
@@ -114,9 +127,9 @@ data:extend {
                 recipe = "steam-engine"
             }
         },
-        icon = "__base__/graphics/technology/electric-energy-acumulators.png",
+        icon = "__base__/graphics/icons/steam-engine.png",
         icon_mipmaps = 4,
-        icon_size = 256
+        icon_size = 64
     },
     make_tech {
         name = "automation-science-pack",
@@ -141,6 +154,21 @@ data:extend {
         icon = "__base__/graphics/technology/inserter-capacity.png",
         icon_mipmaps = 4,
         icon_size = 256,
+        max_level = "infinite",
         upgrade = true
-    }
+    },
+    make_tech {
+        name = "stack-inserter-capacity-bonus",
+        effects = {
+            {
+                type = "stack-inserter-capacity-bonus",
+                modifier = 2
+            }
+        },
+        icon = "__base__/graphics/technology/inserter-capacity.png",
+        icon_mipmaps = 4,
+        icon_size = 256,
+        max_level = "infinite",
+        upgrade = true
+    },
 }

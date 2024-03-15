@@ -27,9 +27,20 @@ burner_lab.energy_source = {
         }
     }
 }
+local function set_lab(layers)
+    layers[1].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab.png"
+    layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab.png"
+    layers[3].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab-light.png"
+    layers[3].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab-light.png"
+end
+
+burner_lab.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
+set_lab(burner_lab.on_animation.layers)
+set_lab(burner_lab.off_animation.layers)
 
 local lab_item = table.deepcopy(data.raw.item.lab)
 lab_item.name = "burner-lab"
+lab_item.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
 lab_item.place_result = "burner-lab"
 
 local lab_recipe = {
@@ -72,15 +83,21 @@ machine.energy_source = {
         }
     }
 }
+machine.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
+machine.animation.layers[1].filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/burner-assembling-machine.png"
+machine.animation.layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/hr-burner-assembling-machine.png"
+
 
 local machine_item = table.deepcopy(data.raw.item["assembling-machine-1"])
 machine_item.name = "burner-assembling-machine"
+machine_item.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
 machine_item.place_result = "burner-assembling-machine"
 
 local machine_recipe = {
     type = "recipe",
     name = "burner-assembling-machine",
     category = "crafting",
+    order = "assembling-machine-0",
     enabled = true,
     energy_required = 5,
     ingredients = {
@@ -90,6 +107,10 @@ local machine_recipe = {
     },
     results = {{type = "item", name = "burner-assembling-machine", amount = 1}}
 }
+
+data.raw.recipe["assembling-machine-1"].order = "assembling-machine-1"
+data.raw.recipe["assembling-machine-2"].order = "assembling-machine-2"
+data.raw.recipe["assembling-machine-3"].order = "assembling-machine-3"
 
 data:extend(
     {
