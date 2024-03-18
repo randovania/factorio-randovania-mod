@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import collections
 import configparser
-import string
-from pathlib import Path
 import shutil
 import typing
+from pathlib import Path
 
 import PIL.Image
 
 from factorio_randovania_mod import color_util
+from factorio_randovania_mod.lua_util import wrap_array_pretty, wrap
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import Configuration
@@ -65,43 +65,6 @@ def get_localized_name(locale: configparser.ConfigParser, n: str) -> str:
             if number.isdigit():
                 return f"{get_localized_name(locale, front)} {number}"
         raise
-
-
-def wrap_array_pretty(data: list) -> str:
-    return "{\n    " + ",\n    ".join(wrap(item, "    ") for item in data) + "\n}"
-
-
-def _dict_key(key: str) -> str:
-    if set(key).issubset(string.ascii_letters + "_"):
-        return key
-    else:
-        return f'["{key}"]'
-
-
-def wrap(data: typing.Any, indent: str = "") -> str:
-    if isinstance(data, list):
-        return "{" + ", ".join(wrap(item, indent) for item in data) + "}"
-
-    if isinstance(data, dict):
-        return (
-            "{\n"
-            + "\n".join(
-                f"{indent}    {_dict_key(key)} = {wrap(value, f'{indent}    ')},"
-                for key, value in data.items()
-            )
-            + f"\n{indent}}}"
-        )
-
-    if isinstance(data, bool):
-        return "true" if data else "false"
-
-    if data is None:
-        return "nil"
-
-    if isinstance(data, str):
-        return f'"{data}"'
-
-    return str(data)
 
 
 template_path = Path(__file__).parent.joinpath("lua_src")
