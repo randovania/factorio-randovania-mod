@@ -84,6 +84,54 @@
                 "required": ["locale_name", "description", "icon", "cost", "prerequisites", "unlocks"]
             }
         },
+        "recipes": {
+            "description": "Modify given recipes",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "recipe_name": {
+                        "type": "string",
+                        "description": "Name of the recipe to modify"
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "New crafting category to use for the recipe"
+                    },
+                    "result_amount": {
+                        "type": "integer",
+                        "description": "How many items are produced by the main result of this recipe"
+                    },
+                    "ingredients": {
+                        "type": "array",
+                        "description": "The new costs of the recipe",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "Item name of this ingredient"
+                                },
+                                "amount": {
+                                    "type": "integer",
+                                    "description": "How many copies of the ingredient are used"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "description": "What kind of ingredient it is",
+                                    "enum": ["item", "fluid"],
+                                    "default": "item"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "required": ["name", "amount"]
+                        }
+                    }
+                },
+                "additionalProperties": false,
+                "required": ["recipe_name", "category", "result_amount", "ingredients"]
+            }
+        },
         "starting_tech": {
             "description": "List of technologies that you start the game with",
             "type": "array",
@@ -96,6 +144,7 @@
         "configuration_identifier",
         "layout_uuid",
         "technologies",
+        "recipes",
         "starting_tech"
     ],
     "additionalProperties": false,

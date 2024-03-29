@@ -25,10 +25,24 @@ class ConfigurationTechnologiesItem(typing.TypedDict):
     unlocks: typing.Required[list[str]]
 
 
+class ConfigurationRecipesItemIngredientsItem(typing.TypedDict):
+    name: typing.Required[str]
+    amount: typing.Required[int]
+    type: typing.NotRequired[str]
+
+
+class ConfigurationRecipesItem(typing.TypedDict):
+    recipe_name: typing.Required[str]
+    category: typing.Required[str]
+    result_amount: typing.Required[int]
+    ingredients: typing.Required[list[ConfigurationRecipesItemIngredientsItem]]
+
+
 class Configuration(typing.TypedDict):
     configuration_identifier: typing.Required[str]
     layout_uuid: typing.Required[str]
     technologies: typing.Required[list[ConfigurationTechnologiesItem]]
+    recipes: typing.Required[list[ConfigurationRecipesItem]]
     starting_tech: typing.Required[list[str]]
 
 

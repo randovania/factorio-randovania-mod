@@ -195,6 +195,7 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
     generate_file("local-unlocks.lua", wrap(local_unlocks))
     generate_file("starting-tech.lua", wrap_array_pretty(patch_data["starting_tech"]))
     generate_file("existing-tree-repurpose.lua", wrap(existing_tree_repurpose))
+    generate_file("custom-recipes.lua", wrap_array_pretty(patch_data["recipes"]))
 
     create_burner_images(factorio_path, output_path)
 

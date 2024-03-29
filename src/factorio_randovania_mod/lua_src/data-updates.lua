@@ -35,7 +35,13 @@ function add_randovania_tech(param)
 end
 
 local tech_tree = require("generated.tech-tree")
-
 for _, tech in ipairs(tech_tree) do
     add_randovania_tech(tech)
+end
+
+for _, custom_recipe in pairs(require("generated.custom-recipes")) do
+    local recipe = data.raw["recipe"][custom_recipe.recipe_name]
+    recipe.category = custom_recipe.category
+    recipe.result_count = custom_recipe.result_amount
+    recipe.ingredients = custom_recipe.ingredients
 end
