@@ -27,16 +27,20 @@ burner_lab.energy_source = {
         }
     }
 }
-local function set_lab(layers)
+local function set_lab(layers, is_on)
     layers[1].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab.png"
     layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab.png"
-    layers[3].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab-light.png"
-    layers[3].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab-light.png"
+
+    if is_on then
+        layers[3].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab-light.png"
+        layers[3].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab-light.png"
+    end
 end
 
 burner_lab.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
-set_lab(burner_lab.on_animation.layers)
-set_lab(burner_lab.off_animation.layers)
+set_lab(burner_lab.on_animation.layers, true)
+set_lab(burner_lab.off_animation.layers, false)
+
 
 local lab_item = table.deepcopy(data.raw.item.lab)
 lab_item.name = "burner-lab"
