@@ -187,6 +187,7 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
             }
 
     shutil.copytree(template_path, output_path)
+    output_path.joinpath("generated").mkdir()
 
     def generate_file(name: str, content: str) -> None:
         output_path.joinpath("generated", name).write_text("return " + content)
