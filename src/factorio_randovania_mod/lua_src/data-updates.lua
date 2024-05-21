@@ -45,3 +45,8 @@ for _, custom_recipe in pairs(require("generated.custom-recipes")) do
     recipe.result_count = custom_recipe.result_amount
     recipe.ingredients = custom_recipe.ingredients
 end
+
+-- Make productivity modules work everywhere
+for _, name in pairs {"productivity-module", "productivity-module-2", "productivity-module-3"} do
+    data.raw["module"][name].limitation = nil
+end
