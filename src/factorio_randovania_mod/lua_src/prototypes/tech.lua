@@ -36,6 +36,18 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        name = "longer-handed-inserter",
+        effects = {
+            {
+                recipe = "longer-handed-inserter",
+                type = "unlock-recipe"
+            }
+        },
+        icon = "__base__/graphics/technology/fast-inserter.png",
+        icon_mipmaps = 4,
+        icon_size = 256
+    },
+    make_tech {
         name = "oil-cracking",
         effects = {
             {

@@ -62,6 +62,7 @@ local kInitialRecipes = {
 
 require("prototypes.burners")
 require("prototypes.tech")
+require("prototypes.extra-tiers")
 
 ---- Lock all initial recipes
 
