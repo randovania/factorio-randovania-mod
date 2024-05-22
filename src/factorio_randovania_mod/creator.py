@@ -70,7 +70,15 @@ def get_localized_name(locale: configparser.ConfigParser, n: str) -> str:
 template_path = Path(__file__).parent.joinpath("lua_src")
 
 
-def create_burner_images(factorio_path: Path, output_path: Path) -> None:
+def hue_shift(input_path: Path, output_path: Path, rotation: float) -> None:
+    """Creates a new image, by shifting the hue of the input image."""
+    img = PIL.Image.open(input_path)
+    new_img = color_util.shift_hue(img, rotation / 360.0)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    new_img.save(output_path)
+
+
+def create_hue_shifted_images(factorio_path: Path, output_path: Path) -> None:
     lab_angle = 120.0
     assembler_angle = 310.0
 
@@ -110,11 +118,11 @@ def create_burner_images(factorio_path: Path, output_path: Path) -> None:
         )
 
     for source_path, target_path, rotation in conversions:
-        img = PIL.Image.open(base_graphics_path.joinpath(source_path))
-        new_img = color_util.shift_hue(img, rotation / 360.0)
-        out_path = output_path.joinpath("graphics", target_path)
-        out_path.parent.mkdir(parents=True, exist_ok=True)
-        new_img.save(out_path)
+        hue_shift(
+            base_graphics_path.joinpath(source_path),
+            output_path.joinpath("graphics", target_path),
+            rotation,
+        )
 
 
 def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) -> None:
@@ -156,9 +164,8 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
             "prerequisites": tech["prerequisites"] if tech["prerequisites"] else None,
             # "fake_effects": tech["fake_effects"],
         }
-        for extra in ["icon_size"]:
-            if extra in tech:
-                new_tech[extra] = tech[extra]
+        if "icon_size" in tech:
+            new_tech["icon_size"] = tech["icon_size"]
         tech_tree_lua.append(new_tech)
 
         if len(tech["unlocks"]) == 1:
@@ -198,7 +205,7 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
     generate_file("existing-tree-repurpose.lua", wrap(existing_tree_repurpose))
     generate_file("custom-recipes.lua", wrap_array_pretty(patch_data["recipes"]))
 
-    create_burner_images(factorio_path, output_path)
+    create_hue_shifted_images(factorio_path, output_path)
 
     with output_path.joinpath("locale/en/strings.cfg").open("w") as f:
         locale.write(f, space_around_delimiters=False)
