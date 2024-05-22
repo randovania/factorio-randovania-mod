@@ -184,11 +184,11 @@ data:extend {
         upgrade = true
     },
     make_tech {
-        name = "laboratory-productivity",
+        name = "research-productivity",
         effects = {
             {
                 type = "laboratory-productivity",
-                modifier = 10
+                modifier = 0.1
             }
         },
         icons = util.technology_icon_constant_productivity("__base__/graphics/technology/research-speed.png"),
