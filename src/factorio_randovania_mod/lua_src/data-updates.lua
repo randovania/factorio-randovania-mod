@@ -29,7 +29,12 @@ function add_randovania_tech(param)
         prerequisites = param.prerequisites,
     }
     if param.take_effects_from then
-        prototype.effects = data.raw["technology"][param.take_effects_from].effects
+        local original = data.raw["technology"][param.take_effects_from]
+        prototype.icon = original.icon
+        prototype.icons = original.icons
+        prototype.icon_size = original.icon_size
+        prototype.icon_mipmaps = original.icon_mipmaps
+        prototype.effects = original.effects
     end
     data:extend { prototype }
 end
