@@ -153,7 +153,7 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
         locale["technology-name"][tech_name] = tech["locale_name"]
         locale["technology-description"][tech_name] = tech["description"]
 
-        new_tech = {
+        new_tech: dict = {
             "name": tech_name,
             "icon": tech["icon"],
             "costs": {

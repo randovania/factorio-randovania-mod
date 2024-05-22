@@ -3,47 +3,46 @@
 # ruff: noqa
 from __future__ import annotations
 
-import typing
+import typing_extensions as typ
 
 
-# The root object
-
-class ConfigurationTechnologiesItemCost(typing.TypedDict):
-    count: typing.Required[int]
-    time: typing.Required[int]
-    ingredients: typing.Required[list[str]]
 
 
-class ConfigurationTechnologiesItem(typing.TypedDict):
-    tech_name: typing.NotRequired[str]
-    locale_name: typing.Required[str]
-    description: typing.Required[str]
-    icon: typing.Required[str]
-    icon_size: typing.NotRequired[int]
-    cost: typing.Required[ConfigurationTechnologiesItemCost]
-    prerequisites: typing.Required[list[str]]
-    unlocks: typing.Required[list[str]]
+# Schema entries
+@typ.final
+class ConfigurationTechnologiesItemCost(typ.TypedDict):
+    count: int
+    time: int
+    ingredients: list[str]
 
+@typ.final
+class ConfigurationTechnologiesItem(typ.TypedDict):
+    tech_name: typ.NotRequired[str]
+    locale_name: str
+    description: str
+    icon: str
+    icon_size: typ.NotRequired[int]
+    cost: ConfigurationTechnologiesItemCost
+    prerequisites: list[str]
+    unlocks: list[str]
 
-class ConfigurationRecipesItemIngredientsItem(typing.TypedDict):
-    name: typing.Required[str]
-    amount: typing.Required[int]
-    type: typing.NotRequired[str]
+@typ.final
+class ConfigurationRecipesItemIngredientsItem(typ.TypedDict):
+    name: str
+    amount: int
+    type: typ.NotRequired[str]
 
+@typ.final
+class ConfigurationRecipesItem(typ.TypedDict):
+    recipe_name: str
+    category: str
+    result_amount: int
+    ingredients: list[ConfigurationRecipesItemIngredientsItem]
 
-class ConfigurationRecipesItem(typing.TypedDict):
-    recipe_name: typing.Required[str]
-    category: typing.Required[str]
-    result_amount: typing.Required[int]
-    ingredients: typing.Required[list[ConfigurationRecipesItemIngredientsItem]]
-
-
-class Configuration(typing.TypedDict):
-    configuration_identifier: typing.Required[str]
-    layout_uuid: typing.Required[str]
-    technologies: typing.Required[list[ConfigurationTechnologiesItem]]
-    recipes: typing.Required[list[ConfigurationRecipesItem]]
-    starting_tech: typing.Required[list[str]]
-
-
-Configuration = Configuration
+@typ.final
+class Configuration(typ.TypedDict):
+    configuration_identifier: str
+    layout_uuid: str
+    technologies: list[ConfigurationTechnologiesItem]
+    recipes: list[ConfigurationRecipesItem]
+    starting_tech: list[str]
