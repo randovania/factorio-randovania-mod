@@ -183,4 +183,18 @@ data:extend {
         max_level = "infinite",
         upgrade = true
     },
+    make_tech {
+        name = "laboratory-productivity",
+        effects = {
+            {
+                type = "laboratory-productivity",
+                modifier = 10
+            }
+        },
+        icons = util.technology_icon_constant_productivity("__base__/graphics/technology/research-speed.png"),
+        icon_mipmaps = 4,
+        icon_size = 256,
+        max_level = "infinite",
+        upgrade = true
+    },
 }
