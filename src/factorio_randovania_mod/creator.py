@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import collections
 import configparser
+import os
 import shutil
 import typing
 from pathlib import Path
@@ -125,23 +126,33 @@ def create_hue_shifted_images(factorio_path: Path, output_path: Path) -> None:
         )
 
 
+def ensure_locale_read(locale: configparser.ConfigParser, files: list[Path]) -> None:
+    filenames = [os.fspath(filename) for filename in files]
+    did_read = locale.read(filenames)
+    if did_read != filenames:
+        missing = set(filenames) - set(did_read)
+        raise FileNotFoundError(str(missing))
+
+
 def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) -> None:
     output_path = output_folder.joinpath("randovania-layout")
     shutil.rmtree(output_path, ignore_errors=True)
 
     original_locale = configparser.ConfigParser()
-    original_locale.read(
+    ensure_locale_read(
+        original_locale,
         [
             factorio_path.joinpath("data/base/locale/en/base.cfg"),
             template_path.joinpath("locale/en/strings.cfg"),
-        ]
+        ],
     )
 
     locale = configparser.ConfigParser()
-    locale.read(
+    ensure_locale_read(
+        locale,
         [
             template_path.joinpath("locale/en/strings.cfg"),
-        ]
+        ],
     )
 
     tech_tree_lua = []
