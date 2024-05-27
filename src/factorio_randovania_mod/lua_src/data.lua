@@ -176,3 +176,14 @@ remove_if(
         return it.type == "inserter-stack-size-bonus"
     end
 )
+
+---- Make Solar and Accumulators better
+
+data.raw["solar-panel"]["solar-panel"].production = "240kW"
+data.raw["accumulator"]["accumulator"].energy_source = {
+    type = "electric",
+    buffer_capacity = "20MJ",
+    usage_priority = "tertiary",
+    input_flow_limit = "1200kW",
+    output_flow_limit = "1200kW"
+}
