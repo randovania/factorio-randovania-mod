@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
-import PIL.Image
 import numpy as np
+import PIL.Image
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # Code copied from https://stackoverflow.com/a/7274986
 # It's licensed under CC BY-SA 3.0
@@ -30,9 +32,7 @@ def rgb_to_hsv(rgb: np.ndarray) -> np.ndarray:
     rc[mask] = (maxc - r)[mask] / (maxc - minc)[mask]
     gc[mask] = (maxc - g)[mask] / (maxc - minc)[mask]
     bc[mask] = (maxc - b)[mask] / (maxc - minc)[mask]
-    hsv[..., 0] = np.select(
-        [r == maxc, g == maxc], [bc - gc, 2.0 + rc - bc], default=4.0 + gc - rc
-    )
+    hsv[..., 0] = np.select([r == maxc, g == maxc], [bc - gc, 2.0 + rc - bc], default=4.0 + gc - rc)
     hsv[..., 0] = (hsv[..., 0] / 6.0) % 1.0
     return hsv
 

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-import configparser
 import os
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import configparser
+    from pathlib import Path
 
 
 def get_from_locale(locale: configparser.ConfigParser, group: str, n: str) -> str:

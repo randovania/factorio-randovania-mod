@@ -7,15 +7,15 @@ import typing
 from pathlib import Path
 
 from factorio_randovania_mod.color_util import hue_shift
-from factorio_randovania_mod.locale_lib import get_from_locale, ensure_locale_read
-from factorio_randovania_mod.lua_util import wrap_array_pretty, wrap
-from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
+from factorio_randovania_mod.locale_lib import ensure_locale_read, get_from_locale
+from factorio_randovania_mod.lua_util import wrap, wrap_array_pretty
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
         Configuration,
         ConfigurationTechnologiesItem,
     )
+    from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
 
 _TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
 
@@ -72,7 +72,7 @@ def process_technology(
     local_unlocks: dict[str, list[str]],
     progressive_sources: dict[tuple[str, ...], list[str]],
     tech: ConfigurationTechnologiesItem,
-    source_locale: configparser.ConfigParser,
+    source_locale: configparser.ConfigParser | None,
 ) -> CustomTechTreeItem:
     """
     Process an entry of patch_data["technologies"]
@@ -103,9 +103,10 @@ def process_technology(
 
     if len(tech["unlocks"]) == 1:
         new_tech["take_effects_from"] = tech["unlocks"][0]
-        output_locale["technology-description"][tech_name] = get_from_locale(
-            source_locale, "technology-description", tech["unlocks"][0]
-        )
+        if source_locale is not None:
+            output_locale["technology-description"][tech_name] = get_from_locale(
+                source_locale, "technology-description", tech["unlocks"][0]
+            )
     elif tech["unlocks"]:
         local_unlocks[tech_name] = tech["unlocks"]
         progressive_sources[tuple(tech["unlocks"])].append(tech_name)
@@ -117,7 +118,7 @@ def generate_output(
     output_path: Path,
     generated_files: GeneratedFiles,
     locale: configparser.ConfigParser,
-    factorio_path: Path,
+    factorio_path: Path | None,
 ) -> None:
     """
     Generates all files for the mod.
@@ -135,35 +136,32 @@ def generate_output(
 
     generate_file("tech-tree.lua", wrap_array_pretty(generated_files["tech_tree"]))
     generate_file("local-unlocks.lua", wrap(generated_files["local_unlocks"]))
-    generate_file(
-        "existing-tree-repurpose.lua", wrap(generated_files["existing_tree_repurpose"])
-    )
+    generate_file("existing-tree-repurpose.lua", wrap(generated_files["existing_tree_repurpose"]))
 
-    generate_file(
-        "starting-tech.lua", wrap_array_pretty(generated_files["starting_tech"])
-    )
-    generate_file(
-        "custom-recipes.lua", wrap_array_pretty(generated_files["custom_recipes"])
-    )
+    generate_file("starting-tech.lua", wrap_array_pretty(generated_files["starting_tech"]))
+    generate_file("custom-recipes.lua", wrap_array_pretty(generated_files["custom_recipes"]))
 
     with output_path.joinpath("locale/en/strings.cfg").open("w") as f:
         locale.write(f, space_around_delimiters=False)
 
-    create_hue_shifted_images(factorio_path, output_path)
+    if factorio_path is not None:
+        create_hue_shifted_images(factorio_path, output_path)
 
 
-def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) -> None:
+def create(factorio_path: Path | None, patch_data: Configuration, output_folder: Path) -> None:
     output_path = output_folder.joinpath("randovania-layout")
     shutil.rmtree(output_path, ignore_errors=True)
 
-    original_locale = configparser.ConfigParser()
-    ensure_locale_read(
-        original_locale,
-        [
-            factorio_path.joinpath("data/base/locale/en/base.cfg"),
-            _TEMPLATE_PATH.joinpath("locale/en/strings.cfg"),
-        ],
-    )
+    original_locale: configparser.ConfigParser | None = None
+    if factorio_path is not None:
+        original_locale = configparser.ConfigParser()
+        ensure_locale_read(
+            original_locale,
+            [
+                factorio_path.joinpath("data/base/locale/en/base.cfg"),
+                _TEMPLATE_PATH.joinpath("locale/en/strings.cfg"),
+            ],
+        )
 
     locale = configparser.ConfigParser()
     ensure_locale_read(
@@ -173,7 +171,7 @@ def create(factorio_path: Path, patch_data: Configuration, output_folder: Path) 
         ],
     )
 
-    progressive_sources = collections.defaultdict(list)
+    progressive_sources: dict[tuple[str, ...], list[str]] = collections.defaultdict(list)
     generated_files: GeneratedFiles = {
         "tech_tree": [],
         "local_unlocks": {},

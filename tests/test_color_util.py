@@ -1,11 +1,10 @@
 import numpy as np
 import pytest
-
 from factorio_randovania_mod import color_util
 
 
 @pytest.mark.parametrize(
-    ["rgb", "expected"],
+    ("rgb", "expected"),
     [
         ((255, 0, 0), (0, 1, 255)),
         ((0, 255, 0), (1 / 3, 1, 255)),

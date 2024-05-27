@@ -11,7 +11,7 @@ class TechCosts(typing.TypedDict):
 
 class CustomTechTreeItem(typing.TypedDict):
     name: str
-    icon_size: int | None
+    icon_size: typing.NotRequired[int]
     icon: str
     costs: TechCosts
     prerequisites: list[str] | None
