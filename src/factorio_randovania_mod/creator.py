@@ -6,13 +6,13 @@ import shutil
 import typing
 from pathlib import Path
 
+from factorio_randovania_mod import schema
 from factorio_randovania_mod.color_util import hue_shift
 from factorio_randovania_mod.locale_lib import ensure_locale_read, get_from_locale
 from factorio_randovania_mod.lua_util import wrap, wrap_array_pretty
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
-        Configuration,
         ConfigurationTechnologiesItem,
     )
     from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
@@ -148,9 +148,11 @@ def generate_output(
         create_hue_shifted_images(factorio_path, output_path)
 
 
-def create(factorio_path: Path | None, patch_data: Configuration, output_folder: Path) -> None:
+def create(factorio_path: Path | None, patch_data: dict, output_folder: Path) -> None:
     output_path = output_folder.joinpath("randovania-layout")
     shutil.rmtree(output_path, ignore_errors=True)
+
+    configuration = schema.validate(patch_data)
 
     original_locale: configparser.ConfigParser | None = None
     if factorio_path is not None:
@@ -176,11 +178,11 @@ def create(factorio_path: Path | None, patch_data: Configuration, output_folder:
         "tech_tree": [],
         "local_unlocks": {},
         "existing_tree_repurpose": {},
-        "starting_tech": patch_data["starting_tech"],
-        "custom_recipes": patch_data["recipes"],
+        "starting_tech": configuration["starting_tech"],
+        "custom_recipes": configuration["recipes"],
     }
 
-    for tech in patch_data["technologies"]:
+    for tech in configuration["technologies"]:
         generated_files["tech_tree"].append(
             process_technology(
                 locale,

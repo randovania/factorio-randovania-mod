@@ -25,6 +25,9 @@ dependencies = [
     # For rotating hue of images
     "pillow",
     "numpy",
+
+    # For validating the schema
+    "jsonschema",
 ]
 
 # Entry Points for PyInstaller
@@ -44,6 +47,7 @@ typing = [
     "mypy",
     "types-Pillow",
     "types-pyinstaller",
+    "types-jsonschema",
 ]
 
 [project.readme]
