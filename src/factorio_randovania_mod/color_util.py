@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from pathlib import Path
+
 import PIL.Image
 import numpy as np
 
@@ -62,3 +66,11 @@ def shift_hue(img: PIL.Image.Image, hue: float) -> PIL.Image.Image:
     rgb = hsv_to_rgb(hsv)
 
     return PIL.Image.fromarray(rgb, "RGBA")
+
+
+def hue_shift(input_path: Path, output_path: Path, rotation: float) -> None:
+    """Creates a new image, by shifting the hue of the input image."""
+    img = PIL.Image.open(input_path)
+    new_img = shift_hue(img, rotation / 360.0)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    new_img.save(output_path)
