@@ -23,8 +23,7 @@ def wrap(data: typing.Any, indent: str = "") -> str:
         return (
             "{\n"
             + "\n".join(
-                f"{indent}    {_dict_key(key)} = {wrap(value, f'{indent}    ')},"
-                for key, value in data.items()
+                f"{indent}    {_dict_key(key)} = {wrap(value, f'{indent}    ')}," for key, value in data.items()
             )
             + f"\n{indent}}}"
         )

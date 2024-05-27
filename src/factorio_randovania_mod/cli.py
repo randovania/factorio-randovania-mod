@@ -22,12 +22,8 @@ def create_parser() -> argparse.ArgumentParser:
         type=Path,
         help="Path to where the mod files will be written to.",
     )
-    parser.add_argument(
-        "--input-json", required=True, type=Path, help="Path to the configuration json."
-    )
-    parser.add_argument(
-        "-q", "--quiet", action="store_true", help="Disables all info and debug logs."
-    )
+    parser.add_argument("--input-json", required=True, type=Path, help="Path to the configuration json.")
+    parser.add_argument("-q", "--quiet", action="store_true", help="Disables all info and debug logs.")
     return parser
 
 

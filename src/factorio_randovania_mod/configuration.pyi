@@ -46,4 +46,3 @@ class Configuration(typ.TypedDict):
     technologies: list[ConfigurationTechnologiesItem]
     recipes: list[ConfigurationRecipesItem]
     starting_tech: list[str]
-
