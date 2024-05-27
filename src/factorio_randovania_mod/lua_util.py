@@ -16,7 +16,7 @@ def _dict_key(key: str) -> str:
 
 
 def wrap(data: typing.Any, indent: str = "") -> str:
-    if isinstance(data, list):
+    if isinstance(data, list | tuple):
         return "{" + ", ".join(wrap(item, indent) for item in data) + "}"
 
     if isinstance(data, dict):
