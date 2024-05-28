@@ -187,3 +187,8 @@ data.raw["accumulator"]["accumulator"].energy_source = {
     input_flow_limit = "1200kW",
     output_flow_limit = "1200kW"
 }
+
+---- Tweak Nuclear Reactor freebies 
+
+data.raw["item"]["steam-turbine"].stack_size = 50
+data.raw["item"]["nuclear-reactor"].stack_size = 5
