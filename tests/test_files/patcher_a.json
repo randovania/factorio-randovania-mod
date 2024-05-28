@@ -3339,7 +3339,6 @@
         {
             "recipe_name": "automation-science-pack",
             "category": "crafting",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "copper-plate",
@@ -3356,7 +3355,6 @@
         {
             "recipe_name": "logistic-science-pack",
             "category": "crafting",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "stone",
@@ -3378,7 +3376,6 @@
         {
             "recipe_name": "military-science-pack",
             "category": "crafting-with-fluid",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "water",
@@ -3395,7 +3392,6 @@
         {
             "recipe_name": "chemical-science-pack",
             "category": "crafting-with-fluid",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "steam",
@@ -3422,7 +3418,6 @@
         {
             "recipe_name": "production-science-pack",
             "category": "crafting",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "coal",
@@ -3454,7 +3449,6 @@
         {
             "recipe_name": "utility-science-pack",
             "category": "crafting-with-fluid",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "uranium-ore",
@@ -3486,7 +3480,6 @@
         {
             "recipe_name": "rocket-part",
             "category": "rocket-building",
-            "result_amount": 1,
             "ingredients": [
                 {
                     "name": "coal",

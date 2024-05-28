@@ -36,7 +36,6 @@ class ConfigurationRecipesItemIngredientsItem(typ.TypedDict):
 class ConfigurationRecipesItem(typ.TypedDict):
     recipe_name: str
     category: str
-    result_amount: int
     ingredients: list[ConfigurationRecipesItemIngredientsItem]
 
 @typ.final

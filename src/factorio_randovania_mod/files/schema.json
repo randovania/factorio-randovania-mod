@@ -98,10 +98,6 @@
                         "type": "string",
                         "description": "New crafting category to use for the recipe"
                     },
-                    "result_amount": {
-                        "type": "integer",
-                        "description": "How many items are produced by the main result of this recipe"
-                    },
                     "ingredients": {
                         "type": "array",
                         "description": "The new costs of the recipe",
@@ -129,7 +125,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "required": ["recipe_name", "category", "result_amount", "ingredients"]
+                "required": ["recipe_name", "category", "ingredients"]
             }
         },
         "starting_tech": {

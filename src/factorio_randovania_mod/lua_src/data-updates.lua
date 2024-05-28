@@ -47,7 +47,6 @@ end
 for _, custom_recipe in pairs(require("generated.custom-recipes")) do
     local recipe = data.raw["recipe"][custom_recipe.recipe_name]
     recipe.category = custom_recipe.category
-    recipe.result_count = custom_recipe.result_amount
     recipe.ingredients = custom_recipe.ingredients
 end
 
