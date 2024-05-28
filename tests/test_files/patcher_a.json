@@ -426,7 +426,7 @@
             "tech_name": "randovania-weapon-shooting-speed-c",
             "locale_name": "Longer Handed inserter",
             "description": "",
-            "icon": "__base__/graphics/technology/fast-inserter.png",
+            "icon": "__randovania-layout__/graphics/technology/longer-handed-inserter.png",
             "icon_size": 256,
             "cost": {
                 "count": 200,
@@ -2364,7 +2364,7 @@
             "tech_name": "randovania-effect-transmission",
             "locale_name": "Long Handed inserter",
             "description": "",
-            "icon": "__base__/graphics/technology/fast-inserter.png",
+            "icon": "__randovania-layout__/graphics/technology/long-handed-inserter.png",
             "icon_size": 256,
             "cost": {
                 "count": 75,
