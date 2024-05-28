@@ -193,3 +193,7 @@ data.raw["accumulator"]["accumulator"].energy_source = {
 
 data.raw["item"]["steam-turbine"].stack_size = 50
 data.raw["item"]["nuclear-reactor"].stack_size = 5
+
+---- Buff Mining Productivity
+
+data.raw["technology"]["mining-productivity-4"].effects[1].modifier = 0.25
