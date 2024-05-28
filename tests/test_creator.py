@@ -11,4 +11,4 @@ def test_create_no_game(tmp_path: Path, test_files: Path) -> None:
     creator.create(None, patch_data, tmp_path.joinpath("mod"))
 
     files = list(tmp_path.joinpath("mod").rglob("*"))
-    assert len(files) == 22
+    assert len(files) == 27
