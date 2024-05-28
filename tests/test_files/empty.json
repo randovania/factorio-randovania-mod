@@ -1,0 +1,9 @@
+{
+    "configuration_identifier": "XXXXXXXX",
+    "layout_uuid": "00000000-0000-1111-0000-000000000000",
+    "technologies": [],
+    "recipes": [],
+    "starting_tech": [
+        "automation-science-pack"
+    ]
+}

@@ -216,6 +216,5 @@ data.raw["recipe"]["fluid-wagon"].ingredients = {
     { "iron-gear-wheel", 10 },
     { "iron-plate",      20 },
     { "steel-plate",     21 },
-    { "pipe",            8 },
-    { "storage-tank",    1 }
+    { "pipe",            8 }
 }
