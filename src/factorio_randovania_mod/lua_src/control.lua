@@ -135,11 +135,21 @@ local function on_player_joined_game(event)
     give_pending_freebies(event.player_index)
 end
 
+
 script.on_event(defines.events.on_player_joined_game, on_player_joined_game)
 
 script.on_init(function()
     global.player_pending_freebies = {}
-    global.total_freebies = {}
+    global.total_freebies = {
+        {
+            name = "stone-furnace",
+            count = game.item_prototypes["stone-furnace"].stack_size,
+        },
+        {
+            name = "burner-mining-drill",
+            count = game.item_prototypes["burner-mining-drill"].stack_size,
+        }
+    }
 
     local player_tech = game.forces.player.technologies
     for _, tech in ipairs(STARTING_TECH) do
