@@ -2,6 +2,10 @@ local LOCAL_UNLOCKS = require("generated.local-unlocks")
 local STARTING_TECH = require("generated.starting-tech")
 
 local playersAlreadyWarned = {}
+local _bannedCategoriesForFreebies = {
+    ["rocket-building"] = true,
+    ["hand-crafting"] = true,
+}
 
 ---@param player_index int
 local function give_pending_freebies(player_index)
@@ -56,13 +60,15 @@ local function freebies_for_tech(research)
     for _, effect in ipairs(research.effects or {}) do
         if effect.type == "unlock-recipe" then
             local recipe_proto = game.recipe_prototypes[effect.recipe]
-            for _, product in ipairs(recipe_proto.products) do
-                local amount = (product.amount or product.amount_max or 0) - (product.catalyst_amount or 0)
-                if product.type == "item" and amount > 0 then
-                    table.insert(result, {
-                        name = product.name,
-                        count = game.item_prototypes[product.name].stack_size,
-                    })
+            if not _bannedCategoriesForFreebies[recipe_proto.category] then
+                for _, product in ipairs(recipe_proto.products) do
+                    local amount = (product.amount or product.amount_max or 0) - (product.catalyst_amount or 0)
+                    if product.type == "item" and amount > 0 then
+                        table.insert(result, {
+                            name = product.name,
+                            count = game.item_prototypes[product.name].stack_size,
+                        })
+                    end
                 end
             end
         end
