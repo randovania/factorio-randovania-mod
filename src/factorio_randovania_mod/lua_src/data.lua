@@ -60,13 +60,7 @@ local kInitialRecipes = {
     "lab"
 }
 
-data:extend {
-    {
-        type = "recipe-category",
-        name = "hand-crafting"
-    }
-}
-
+require("prototypes.handcraft")
 require("prototypes.burners")
 require("prototypes.tech")
 require("prototypes.extra-tiers")
