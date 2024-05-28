@@ -1663,10 +1663,10 @@
         },
         {
             "tech_name": "randovania-solar-panel-equipment",
-            "locale_name": "Regular Inserter Capacity Bonus",
+            "locale_name": "Barrel Handling",
             "description": "",
-            "icon": "__base__/graphics/technology/inserter-capacity.png",
-            "icon_size": 256,
+            "icon": "__base__/graphics/icons/fluid/barreling/empty-barrel.png",
+            "icon_size": 64,
             "cost": {
                 "count": 100,
                 "time": 15,
@@ -1680,7 +1680,7 @@
                 "randovania-modular-armor"
             ],
             "unlocks": [
-                "regular-inserter-capacity-bonus"
+                "fluid-handling"
             ]
         },
         {
@@ -2127,7 +2127,7 @@
         },
         {
             "tech_name": "randovania-speed-module-c",
-            "locale_name": "Fluid Handling",
+            "locale_name": "Fluid storage",
             "description": "",
             "icon": "__base__/graphics/technology/fluid-handling.png",
             "icon_size": 256,
@@ -2145,7 +2145,7 @@
                 "randovania-speed-module"
             ],
             "unlocks": [
-                "fluid-handling"
+                "fluid-storage"
             ]
         },
         {

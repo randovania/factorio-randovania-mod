@@ -103,7 +103,7 @@ remove_if(
 )
 
 ---- Merge automated rail into Railway
-for _, recipe_name in ipairs {"train-stop", "rail-signal", "rail-chain-signal"} do
+for _, recipe_name in ipairs { "train-stop", "rail-signal", "rail-chain-signal" } do
     table.insert(
         data.raw["technology"]["railway"]["effects"],
         {
@@ -189,7 +189,7 @@ data.raw["accumulator"]["accumulator"].energy_source = {
     output_flow_limit = "1200kW"
 }
 
----- Tweak Nuclear Reactor freebies 
+---- Tweak Nuclear Reactor freebies
 
 data.raw["item"]["steam-turbine"].stack_size = 50
 data.raw["item"]["nuclear-reactor"].stack_size = 5
@@ -197,3 +197,25 @@ data.raw["item"]["nuclear-reactor"].stack_size = 5
 ---- Buff Mining Productivity
 
 data.raw["technology"]["mining-productivity-4"].effects[1].modifier = 0.25
+
+---- Fluid/Barrel Handling
+
+table.insert(data.raw["technology"]["fluid-wagon"]["effects"], {
+    type = "unlock-recipe",
+    recipe = "pump"
+})
+remove_if(
+    data.raw["technology"]["fluid-handling"]["effects"],
+    function(it)
+        return it.recipe == "storage-tank" or it.recipe == "pump"
+    end
+)
+data.raw["technology"]["fluid-handling"].icon = "__base__/graphics/icons/fluid/barreling/empty-barrel.png"
+data.raw["technology"]["fluid-handling"].icon_size = 64
+data.raw["recipe"]["fluid-wagon"].ingredients = {
+    { "iron-gear-wheel", 10 },
+    { "iron-plate",      20 },
+    { "steel-plate",     21 },
+    { "pipe",            8 },
+    { "storage-tank",    1 }
+}

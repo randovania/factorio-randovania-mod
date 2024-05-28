@@ -197,4 +197,20 @@ data:extend {
         max_level = "infinite",
         upgrade = true
     },
+    make_tech {
+        name = "fluid-storage",
+        effects = {
+            {
+                type = "unlock-recipe",
+                recipe = "storage-tank"
+            },
+            {
+                type = "unlock-recipe",
+                recipe = "pump"
+            }
+        },
+        icon = "__base__/graphics/technology/fluid-handling.png",
+        icon_mipmaps = 4,
+        icon_size = 256
+    }
 }
