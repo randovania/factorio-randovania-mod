@@ -1,11 +1,11 @@
 local function make_tech(param)
     param.type = "technology"
     param.order = param.order or "d-b"
-    param.unit = {
-        count = 10,
-        ingredients = { { "automation-science-pack", 1 } },
-        time = 15
-    }
+    if param.cost_reference then
+        param.unit = table.deepcopy(data.raw["technology"][param.cost_reference].unit)
+        param.prerequisites = { param.cost_reference }
+        param.cost_reference = nil
+    end
     return param
 end
 
@@ -24,6 +24,7 @@ data:extend {
     },
 
     make_tech {
+        cost_reference = "automation",
         name = "long-handed-inserter",
         effects = {
             {
@@ -36,6 +37,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "automation",
         name = "longer-handed-inserter",
         effects = {
             {
@@ -48,6 +50,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "advanced-oil-processing",
         name = "oil-cracking",
         effects = {
             {
@@ -68,6 +71,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "oil-processing",
         name = "solid-fuel",
         effects = {
             {
@@ -88,6 +92,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "heavy-armor",
         name = "light-armor",
         effects = {
             {
@@ -100,6 +105,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "electric-energy-distribution-1",
         name = "big-electric-pole",
         effects = {
             {
@@ -113,6 +119,11 @@ data:extend {
     },
     make_tech {
         name = "inserter",
+        unit = {
+            count = 20,
+            ingredients = { },
+            time = 20
+        },
         effects = {
             {
                 recipe = "inserter",
@@ -121,10 +132,16 @@ data:extend {
         },
         icon = "__base__/graphics/technology/fast-inserter.png",
         icon_mipmaps = 4,
-        icon_size = 256
+        icon_size = 256,
+
     },
     make_tech {
         name = "steam-power",
+        unit = {
+            count = 50,
+            ingredients = { },
+            time = 20
+        },
         effects = {
             {
                 type = "unlock-recipe",
@@ -145,6 +162,11 @@ data:extend {
     },
     make_tech {
         name = "automation-science-pack",
+        unit = {
+            count = 10,
+            ingredients = { },
+            time = 10
+        },
         effects = {
             {
                 type = "unlock-recipe",
@@ -156,6 +178,7 @@ data:extend {
         icon_size = 256
     },
     make_tech {
+        cost_reference = "inserter-capacity-bonus-2",
         name = "regular-inserter-capacity-bonus",
         effects = {
             {
@@ -170,6 +193,7 @@ data:extend {
         upgrade = true
     },
     make_tech {
+        cost_reference = "inserter-capacity-bonus-1",
         name = "stack-inserter-capacity-bonus",
         effects = {
             {
@@ -184,6 +208,7 @@ data:extend {
         upgrade = true
     },
     make_tech {
+        cost_reference = "research-speed-1",
         name = "research-productivity",
         effects = {
             {
@@ -198,6 +223,7 @@ data:extend {
         upgrade = true
     },
     make_tech {
+        cost_reference = "fluid-handling",
         name = "fluid-storage",
         effects = {
             {
