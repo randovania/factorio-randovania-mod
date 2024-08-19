@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from factorio_randovania_mod import color_util
 
 
