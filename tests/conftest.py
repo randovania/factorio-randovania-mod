@@ -5,6 +5,6 @@ import pytest
 _DIR = Path(__file__).parent
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_files() -> Path:
     return _DIR.joinpath("test_files")
