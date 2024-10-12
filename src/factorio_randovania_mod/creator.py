@@ -7,7 +7,6 @@ import typing
 from pathlib import Path
 
 from factorio_randovania_mod import schema
-from factorio_randovania_mod.color_util import hue_shift
 from factorio_randovania_mod.locale_lib import ensure_locale_read, get_from_locale
 from factorio_randovania_mod.lua_util import wrap, wrap_array_pretty
 
@@ -18,53 +17,6 @@ if typing.TYPE_CHECKING:
     from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
 
 _TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
-
-
-def create_hue_shifted_images(factorio_path: Path, output_path: Path) -> None:
-    lab_angle = 120.0
-    assembler_angle = 310.0
-
-    base_graphics_path = factorio_path.joinpath("data/base/graphics")
-
-    lab_images = [
-        "entity/lab/lab.png",
-        "entity/lab/lab-light.png",
-        "entity/lab/hr-lab.png",
-        "entity/lab/hr-lab-light.png",
-        "icons/lab.png",
-    ]
-    assembler_images = [
-        "entity/assembling-machine-1/assembling-machine-1.png",
-        "entity/assembling-machine-1/hr-assembling-machine-1.png",
-        "icons/assembling-machine-1.png",
-    ]
-
-    conversions = []
-
-    for path in lab_images:
-        conversions.append(
-            (
-                path,
-                path.replace("lab", "burner-lab"),
-                lab_angle / 360.0,
-            )
-        )
-
-    for path in assembler_images:
-        conversions.append(
-            (
-                path,
-                path.replace("assembling-machine-1", "burner-assembling-machine"),
-                assembler_angle / 360.0,
-            )
-        )
-
-    for source_path, target_path, rotation in conversions:
-        hue_shift(
-            base_graphics_path.joinpath(source_path),
-            output_path.joinpath("graphics", target_path),
-            rotation,
-        )
 
 
 def process_technology(
@@ -118,14 +70,12 @@ def generate_output(
     output_path: Path,
     generated_files: GeneratedFiles,
     locale: configparser.ConfigParser,
-    factorio_path: Path | None,
 ) -> None:
     """
     Generates all files for the mod.
     :param output_path: Where to place the output
     :param generated_files: Data for generating all lua files
     :param locale: Used as template
-    :param factorio_path: Source for hue shifting the images
     :return:
     """
     shutil.copytree(_TEMPLATE_PATH, output_path)
@@ -143,9 +93,6 @@ def generate_output(
 
     with output_path.joinpath("locale/en/strings.cfg").open("w") as f:
         locale.write(f, space_around_delimiters=False)
-
-    if factorio_path is not None:
-        create_hue_shifted_images(factorio_path, output_path)
 
 
 def create(factorio_path: Path | None, patch_data: dict, output_folder: Path) -> None:
@@ -207,4 +154,4 @@ def create(factorio_path: Path | None, patch_data: dict, output_folder: Path) ->
                 "prerequisites": prerequisites,
             }
 
-    generate_output(output_path, generated_files, locale, factorio_path)
+    generate_output(output_path, generated_files, locale)

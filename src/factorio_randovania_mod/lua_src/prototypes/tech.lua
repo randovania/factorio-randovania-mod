@@ -32,7 +32,7 @@ data:extend {
                 type = "unlock-recipe"
             }
         },
-        icon = "__randovania-layout__/graphics/technology/long-handed-inserter.png",
+        icon = "__randovania-assets__/graphics/technology/long-handed-inserter.png",
         icon_mipmaps = 4,
         icon_size = 256
     },
@@ -45,7 +45,7 @@ data:extend {
                 type = "unlock-recipe"
             }
         },
-        icon = "__randovania-layout__/graphics/technology/longer-handed-inserter.png",
+        icon = "__randovania-assets__/graphics/technology/longer-handed-inserter.png",
         icon_mipmaps = 4,
         icon_size = 256
     },

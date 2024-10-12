@@ -28,23 +28,23 @@ burner_lab.energy_source = {
     }
 }
 local function set_lab(layers, is_on)
-    layers[1].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab.png"
-    layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab.png"
+    layers[1].filename = "__randovania-assets__/graphics/entity/burner-lab/burner-lab.png"
+    layers[1].hr_version.filename = "__randovania-assets__/graphics/entity/burner-lab/hr-burner-lab.png"
 
     if is_on then
-        layers[3].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab-light.png"
-        layers[3].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab-light.png"
+        layers[3].filename = "__randovania-assets__/graphics/entity/burner-lab/burner-lab-light.png"
+        layers[3].hr_version.filename = "__randovania-assets__/graphics/entity/burner-lab/hr-burner-lab-light.png"
     end
 end
 
-burner_lab.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
+burner_lab.icon = "__randovania-assets__/graphics/icons/burner-lab.png"
 set_lab(burner_lab.on_animation.layers, true)
 set_lab(burner_lab.off_animation.layers, false)
 
 
 local lab_item = table.deepcopy(data.raw.item.lab)
 lab_item.name = "burner-lab"
-lab_item.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
+lab_item.icon = "__randovania-assets__/graphics/icons/burner-lab.png"
 lab_item.place_result = "burner-lab"
 
 local lab_recipe = {
@@ -87,14 +87,14 @@ machine.energy_source = {
         }
     }
 }
-machine.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
-machine.animation.layers[1].filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/burner-assembling-machine.png"
-machine.animation.layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/hr-burner-assembling-machine.png"
+machine.icon = "__randovania-assets__/graphics/icons/burner-assembling-machine.png"
+machine.animation.layers[1].filename = "__randovania-assets__/graphics/entity/burner-assembling-machine/burner-assembling-machine.png"
+machine.animation.layers[1].hr_version.filename = "__randovania-assets__/graphics/entity/burner-assembling-machine/hr-burner-assembling-machine.png"
 
 
 local machine_item = table.deepcopy(data.raw.item["assembling-machine-1"])
 machine_item.name = "burner-assembling-machine"
-machine_item.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
+machine_item.icon = "__randovania-assets__/graphics/icons/burner-assembling-machine.png"
 machine_item.place_result = "burner-assembling-machine"
 
 local machine_recipe = {

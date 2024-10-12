@@ -1703,7 +1703,7 @@
             "tech_name": "randovania-productivity-module",
             "locale_name": "Longer Handed inserter",
             "description": "",
-            "icon": "__randovania-layout__/graphics/technology/longer-handed-inserter.png",
+            "icon": "__randovania-assets__/graphics/technology/longer-handed-inserter.png",
             "icon_size": 256,
             "cost": {
                 "count": 50,
@@ -2652,7 +2652,7 @@
             "tech_name": "randovania-personal-laser-defense-equipment",
             "locale_name": "Long Handed inserter",
             "description": "",
-            "icon": "__randovania-layout__/graphics/technology/long-handed-inserter.png",
+            "icon": "__randovania-assets__/graphics/technology/long-handed-inserter.png",
             "icon_size": 256,
             "cost": {
                 "count": 100,
