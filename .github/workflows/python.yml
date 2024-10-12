@@ -2,9 +2,10 @@ name: Python Package
 
 on:
   pull_request:
+  merge_group:
   push:
     branches:
-      - '*'
+      - 'main'
     tags:
       - '*'
 
@@ -49,6 +50,7 @@ jobs:
         python:
           - {version: '3.11', wheel: 'cp311-cp311'}
           - {version: '3.12', wheel: 'cp312-cp312'}
+          - {version: '3.13', wheel: 'cp313-cp313'}
 
     steps:
       - name: Checkout
