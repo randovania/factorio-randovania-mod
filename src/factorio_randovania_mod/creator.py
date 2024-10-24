@@ -24,7 +24,6 @@ def process_technology(
     local_unlocks: dict[str, list[str]],
     progressive_sources: dict[tuple[str, ...], list[str]],
     tech: ConfigurationTechnologiesItem,
-    source_locale: configparser.ConfigParser | None,
 ) -> CustomTechTreeItem:
     """
     Process an entry of patch_data["technologies"]
@@ -32,7 +31,6 @@ def process_technology(
     :param local_unlocks:
     :param progressive_sources:
     :param tech:
-    :param source_locale:
     :return: A new entry for tech-tree.lua
     """
     tech_name = tech["tech_name"]
@@ -59,10 +57,8 @@ def process_technology(
 
     if len(tech["unlocks"]) == 1:
         new_tech["take_effects_from"] = tech["unlocks"][0]
-        # if source_locale is not None:
-        #     output_locale["technology-description"][tech_name] = get_from_locale(
-        #         source_locale, "technology-description", tech["unlocks"][0]
-        #     )
+        del output_locale["technology-description"][tech_name]
+
     elif tech["unlocks"]:
         local_unlocks[tech_name] = tech["unlocks"]
         progressive_sources[tuple(tech["unlocks"])].append(tech_name)
@@ -99,22 +95,11 @@ def generate_output(
         locale.write(f, space_around_delimiters=False)
 
 
-def create(factorio_path: Path | None, patch_data: dict, output_folder: Path) -> None:
+def create(patch_data: dict, output_folder: Path) -> None:
     output_path = output_folder.joinpath("randovania-layout")
     shutil.rmtree(output_path, ignore_errors=True)
 
     configuration = schema.validate(patch_data)
-
-    original_locale: configparser.ConfigParser | None = None
-    if factorio_path is not None:
-        original_locale = configparser.ConfigParser()
-        ensure_locale_read(
-            original_locale,
-            [
-                factorio_path.joinpath("data/base/locale/en/base.cfg"),
-                _TEMPLATE_PATH.joinpath("locale/en/strings.cfg"),
-            ],
-        )
 
     locale = configparser.ConfigParser()
     ensure_locale_read(
@@ -140,7 +125,6 @@ def create(factorio_path: Path | None, patch_data: dict, output_folder: Path) ->
                 generated_files["local_unlocks"],
                 progressive_sources,
                 tech,
-                original_locale,
             )
         )
 

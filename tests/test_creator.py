@@ -8,7 +8,7 @@ def test_create_no_game(tmp_path: Path, test_files: Path) -> None:
     with test_files.joinpath("patcher_a.json").open() as f:
         patch_data = json.load(f)
 
-    creator.create(None, patch_data, tmp_path.joinpath("mod"))
+    creator.create(patch_data, tmp_path.joinpath("mod"))
 
     files = list(tmp_path.joinpath("mod").rglob("*"))
-    assert len(files) == 27
+    assert len(files) == 20
