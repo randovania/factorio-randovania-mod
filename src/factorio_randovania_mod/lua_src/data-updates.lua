@@ -17,11 +17,11 @@ for name, tech in pairs(data.raw["technology"]) do
 end
 
 function add_randovania_tech(param)
+    ---@type data.TechnologyPrototype
     local prototype = {
         type = "technology",
         name = param.name,
         icon_size = param.icon_size or 256,
-        icon_mipmaps = 4,
         icon = param.icon,
         effects = {},
         unit = param.costs,
@@ -33,7 +33,6 @@ function add_randovania_tech(param)
         prototype.icon = original.icon
         prototype.icons = original.icons
         prototype.icon_size = original.icon_size
-        prototype.icon_mipmaps = original.icon_mipmaps
         prototype.effects = original.effects
     end
     data:extend { prototype }
@@ -51,6 +50,6 @@ for _, custom_recipe in pairs(require("generated.custom-recipes")) do
 end
 
 -- Make productivity modules work everywhere
-for _, name in pairs {"productivity-module", "productivity-module-2", "productivity-module-3"} do
-    data.raw["module"][name].limitation = nil
+for _, recipe in pairs(data.raw["recipe"]) do
+    recipe.allow_productivity = true
 end

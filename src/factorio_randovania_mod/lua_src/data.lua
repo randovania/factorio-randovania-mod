@@ -6,17 +6,6 @@ local function remove_if(t, pred)
     end
 end
 
-local function set_recipe_field(recipe, field, value)
-    if recipe.normal then
-        recipe.normal[field] = value
-    else
-        recipe[field] = value
-    end
-    if recipe.expensive then
-        recipe.expensive[field] = value
-    end
-end
-
 local kRecipesWithNewTech = {
     "transport-belt",
     "electronic-circuit",
@@ -69,11 +58,11 @@ require("prototypes.modules")
 ---- Lock all initial recipes
 
 for _, name in ipairs(kRecipesWithNewTech) do
-    set_recipe_field(data.raw["recipe"][name], "enabled", false)
+    data.raw["recipe"][name].enabled = false
 end
 
 -- for _, name in ipairs(kInitialRecipes) do
---     set_recipe_field(data.raw["recipe"][name], "enabled", false)
+--    data.raw["recipe"][name].enabled = false
 -- end
 
 ---- Unlock belts in logistic 1
@@ -213,8 +202,8 @@ remove_if(
 data.raw["technology"]["fluid-handling"].icon = "__base__/graphics/icons/fluid/barreling/empty-barrel.png"
 data.raw["technology"]["fluid-handling"].icon_size = 64
 data.raw["recipe"]["fluid-wagon"].ingredients = {
-    { "iron-gear-wheel", 10 },
-    { "iron-plate",      20 },
-    { "steel-plate",     21 },
-    { "pipe",            8 }
+    { type = "item", name = "iron-gear-wheel", amount = 10 },
+    { type = "item", name = "iron-plate",      amount = 20 },
+    { type = "item", name = "steel-plate",     amount = 21 },
+    { type = "item", name = "pipe",            amount = 8 }
 }

@@ -14,7 +14,6 @@ longer_entity.fast_replaceable_group = "longer-handed-inserter"
 ---@param sprite data.Sprite|data.SpriteNWaySheet
 local function apply_tint(sprite)
     sprite.tint = { r = 0.5, g = 0.5, b = 0.5, a = 1 }
-    sprite.hr_version.tint = { r = 0.5, g = 0.5, b = 0.5, a = 1 }
 end
 
 apply_tint(longer_entity.hand_base_picture)
@@ -28,10 +27,12 @@ apply_tint(longer_entity.platform_picture.sheet)
 local longer_recipe = table.deepcopy(data.raw["recipe"]["long-handed-inserter"])
 longer_recipe.name = "longer-handed-inserter"
 longer_recipe.ingredients = {
-    { "iron-stick", 4 },
-    { "inserter",   3 }
+    { type = "item", name = "iron-stick", amount = 4 },
+    { type = "item", name = "inserter",   amount = 3 },
 }
-longer_recipe.result = "longer-handed-inserter"
+longer_recipe.results = {
+    { type = "item", name = "longer-handed-inserter", amount = 1 }
+}
 
 data:extend {
     longer_item, longer_entity, longer_recipe
