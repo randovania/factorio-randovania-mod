@@ -13,6 +13,10 @@ local function make_tech(param)
     return param
 end
 
+local impossible_lab = table.deepcopy(data.raw["lab"]["lab"])
+impossible_lab.name = "impossible-lab"
+impossible_lab.inputs = {"impossible-science-pack"}
+
 data:extend {
     {
         type = "tool",
@@ -25,6 +29,7 @@ data:extend {
         durability_description_key = "description.science-pack-remaining-amount-key",
         durability_description_value = "description.science-pack-remaining-amount-value"
     },
+    impossible_lab,
 
     make_tech {
         cost_reference = "automation",

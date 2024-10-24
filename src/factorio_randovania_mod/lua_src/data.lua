@@ -34,7 +34,6 @@ local kInitialRecipes = {
     -- burner tooling
     "burner-inserter",
     "burner-mining-drill",
-    "electric-mining-drill",
     -- science
     "lab"
 }
@@ -55,6 +54,9 @@ for _, name in ipairs(kInitialRecipes) do
    data.raw["recipe"][name].enabled = true
    data.raw["recipe"][name].hidden = nil
 end
+
+---- Change requirement to crafting a burner lab, so electronics isn't required to be super early
+data.raw["technology"]["automation-science-pack"].research_trigger.item = "burner-lab"
 
 ---- Unlock belts in logistic 1
 table.insert(

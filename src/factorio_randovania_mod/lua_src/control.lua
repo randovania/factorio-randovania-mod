@@ -9,7 +9,7 @@ local _bannedCategoriesForFreebies = {
 
 ---@param player_index int
 local function give_pending_freebies(player_index)
-    local freebies = global.player_pending_freebies[player_index]
+    local freebies = storage.player_pending_freebies[player_index]
     local player = game.get_player(player_index)
     if not player or not freebies then
         return
@@ -57,16 +57,22 @@ end
 local function freebies_for_tech(research)
     local result = {}
 
-    for _, effect in ipairs(research.effects or {}) do
+    for _, effect in ipairs(research.prototype.effects) do
         if effect.type == "unlock-recipe" then
-            local recipe_proto = game.recipe_prototypes[effect.recipe]
+            local recipe_proto = prototypes.recipe[effect.recipe]
             if not _bannedCategoriesForFreebies[recipe_proto.category] then
+                local ingredient_count = {}
+                for _, ingredient in pairs(recipe_proto.ingredients) do
+                    if ingredient.type == "item" then
+                        ingredient_count[ingredient.name] = ingredient_count.amount
+                    end
+                end
+
                 for _, product in ipairs(recipe_proto.products) do
-                    local amount = (product.amount or product.amount_max or 0) - (product.catalyst_amount or 0)
-                    if product.type == "item" and amount > 0 then
+                    if product.type == "item" and (product.amount or product.amount_max) - (ingredient_count[product.name] or 0) > 0 then
                         table.insert(result, {
                             name = product.name,
-                            count = game.item_prototypes[product.name].stack_size,
+                            count = prototypes.item[product.name].stack_size,
                         })
                     end
                 end
@@ -84,12 +90,12 @@ local function give_freebies(research)
     local freebies = freebies_for_tech(research)
 
     for _, freebie in pairs(freebies) do
-        table.insert(global.total_freebies, freebie)
+        table.insert(storage.total_freebies, freebie)
     end
 
     for _, player in pairs(research.force.players) do
         for _, freebie in pairs(freebies) do
-            table.insert(global.player_pending_freebies[player.index], freebie)
+            table.insert(storage.player_pending_freebies[player.index], freebie)
         end
         give_pending_freebies(player.index)
     end
@@ -119,18 +125,18 @@ script.on_event(defines.events.on_player_main_inventory_changed, on_player_main_
 ---@param event EventData.on_player_joined_game
 local function on_player_joined_game(event)
     -- We shouldn't need this.
-    -- if not global.player_pending_freebies then
-    --     global.player_pending_freebies = {}
-    --     global.total_freebies = {}
+    -- if not storage.player_pending_freebies then
+    --     storage.player_pending_freebies = {}
+    --     storage.total_freebies = {}
     -- end
 
-    if not global.player_pending_freebies[event.player_index] then
+    if not storage.player_pending_freebies[event.player_index] then
         -- New joiner!
         local freebies = {}
-        for _, freebie in pairs(global.total_freebies) do
+        for _, freebie in pairs(storage.total_freebies) do
             table.insert(freebies, freebie)
         end
-        global.player_pending_freebies[event.player_index] = freebies
+        storage.player_pending_freebies[event.player_index] = freebies
     end
     give_pending_freebies(event.player_index)
 end
@@ -139,15 +145,15 @@ end
 script.on_event(defines.events.on_player_joined_game, on_player_joined_game)
 
 script.on_init(function()
-    global.player_pending_freebies = {}
-    global.total_freebies = {
+    storage.player_pending_freebies = {}
+    storage.total_freebies = {
         {
             name = "stone-furnace",
-            count = game.item_prototypes["stone-furnace"].stack_size,
+            count = prototypes.item["stone-furnace"].stack_size,
         },
         {
             name = "burner-mining-drill",
-            count = game.item_prototypes["burner-mining-drill"].stack_size,
+            count = prototypes.item["burner-mining-drill"].stack_size,
         }
     }
 
@@ -168,7 +174,7 @@ local function data_sync()
         end
     end
 
-    rcon.print(game.table_to_json({
+    rcon.print(helpers.table_to_json({
         api_version = 1,
         unlocked_research = unlocked_research,
     }))

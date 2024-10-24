@@ -7,7 +7,7 @@ import typing
 from pathlib import Path
 
 from factorio_randovania_mod import schema
-from factorio_randovania_mod.locale_lib import ensure_locale_read, get_from_locale
+from factorio_randovania_mod.locale_lib import ensure_locale_read
 from factorio_randovania_mod.lua_util import wrap, wrap_array_pretty
 
 if typing.TYPE_CHECKING:
@@ -42,23 +42,27 @@ def process_technology(
     new_tech: CustomTechTreeItem = {
         "name": tech_name,
         "icon": tech["icon"],
-        "costs": {
-            "count": tech["cost"]["count"],
-            "time": tech["cost"]["time"],
-            "ingredients": [(it, 1) for it in tech["cost"]["ingredients"]],
-        },
         "prerequisites": tech["prerequisites"] if tech["prerequisites"] else None,
         # "fake_effects": tech["fake_effects"],
     }
+    if "cost" in tech:
+        new_tech["costs"] = {
+            "count": tech["cost"]["count"],
+            "time": tech["cost"]["time"],
+            "ingredients": [(it, 1) for it in tech["cost"]["ingredients"]],
+        }
+    else:
+        new_tech["research_trigger"] = tech["research_trigger"]
+
     if "icon_size" in tech:
         new_tech["icon_size"] = tech["icon_size"]
 
     if len(tech["unlocks"]) == 1:
         new_tech["take_effects_from"] = tech["unlocks"][0]
-        if source_locale is not None:
-            output_locale["technology-description"][tech_name] = get_from_locale(
-                source_locale, "technology-description", tech["unlocks"][0]
-            )
+        # if source_locale is not None:
+        #     output_locale["technology-description"][tech_name] = get_from_locale(
+        #         source_locale, "technology-description", tech["unlocks"][0]
+        #     )
     elif tech["unlocks"]:
         local_unlocks[tech_name] = tech["unlocks"]
         progressive_sources[tuple(tech["unlocks"])].append(tech_name)

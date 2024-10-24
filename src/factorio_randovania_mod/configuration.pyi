@@ -9,6 +9,11 @@ import typing_extensions as typ
 
 
 # Schema entries
+class ConfigurationTechnologiesItemResearchTrigger(typ.TypedDict, total=False):
+    entity: str
+    item: str
+    count: int
+
 @typ.final
 class ConfigurationTechnologiesItemCost(typ.TypedDict):
     count: int
@@ -22,7 +27,8 @@ class ConfigurationTechnologiesItem(typ.TypedDict):
     description: str
     icon: str
     icon_size: typ.NotRequired[int]
-    cost: ConfigurationTechnologiesItemCost
+    research_trigger: typ.NotRequired[ConfigurationTechnologiesItemResearchTrigger]
+    cost: typ.NotRequired[ConfigurationTechnologiesItemCost]
     prerequisites: list[str]
     unlocks: list[str]
 
