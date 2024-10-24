@@ -137,46 +137,6 @@ data:extend {
 
     },
     make_tech {
-        name = "steam-power",
-        unit = {
-            count = 50,
-            ingredients = {},
-            time = 20
-        },
-        effects = {
-            {
-                type = "unlock-recipe",
-                recipe = "offshore-pump"
-            },
-            {
-                type = "unlock-recipe",
-                recipe = "boiler"
-            },
-            {
-                type = "unlock-recipe",
-                recipe = "steam-engine"
-            }
-        },
-        icon = "__base__/graphics/icons/steam-engine.png",
-        icon_size = 64
-    },
-    make_tech {
-        name = "automation-science-pack",
-        unit = {
-            count = 10,
-            ingredients = {},
-            time = 10
-        },
-        effects = {
-            {
-                type = "unlock-recipe",
-                recipe = "automation-science-pack"
-            }
-        },
-        icon = "__base__/graphics/technology/automation-science-pack.png",
-        icon_size = 256
-    },
-    make_tech {
         cost_reference = "inserter-capacity-bonus-2",
         name = "regular-inserter-capacity-bonus",
         effects = {

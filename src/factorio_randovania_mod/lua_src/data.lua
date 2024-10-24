@@ -8,14 +8,7 @@ end
 
 local kRecipesWithNewTech = {
     "transport-belt",
-    "electronic-circuit",
     "light-armor",
-    "inserter",
-    "automation-science-pack",
-    -- steam power
-    "offshore-pump",
-    "boiler",
-    "steam-engine"
 }
 
 local kInitialRecipes = {
@@ -25,12 +18,9 @@ local kInitialRecipes = {
     "iron-plate",
     "stone-brick",
     -- military
-    "radar",
     "pistol",
     "firearm-magazine",
-    "repair-pack",
     -- iron processing
-    "iron-stick",
     "iron-gear-wheel",
     "iron-chest",
     -- copper processing
@@ -61,9 +51,10 @@ for _, name in ipairs(kRecipesWithNewTech) do
     data.raw["recipe"][name].enabled = false
 end
 
--- for _, name in ipairs(kInitialRecipes) do
---    data.raw["recipe"][name].enabled = false
--- end
+for _, name in ipairs(kInitialRecipes) do
+   data.raw["recipe"][name].enabled = true
+   data.raw["recipe"][name].hidden = nil
+end
 
 ---- Unlock belts in logistic 1
 table.insert(
@@ -75,14 +66,6 @@ table.insert(
     }
 )
 
----- Repurpose electronics for electronic-circuit
-data.raw["technology"]["electronics"].effects = {
-    {
-        recipe = "electronic-circuit",
-        type = "unlock-recipe"
-    }
-}
-
 ---- Move Long Handed Inserter for it's own tech
 remove_if(
     data.raw["technology"]["automation"]["effects"],
@@ -90,6 +73,20 @@ remove_if(
         return it.recipe == "long-handed-inserter"
     end
 )
+
+-- Adjust the starting techs from unlocking too much
+remove_if(
+    data.raw["technology"]["steam-power"]["effects"],
+    function(it)
+        return it.recipe == "pipe" or it.recipe == "pipe-to-ground"
+    end
+)
+data.raw["technology"]["electronics"]["effects"] = {
+    {
+        type = "unlock-recipe",
+        recipe = "electronic-circuit"
+    },
+}
 
 ---- Merge automated rail into Railway
 for _, recipe_name in ipairs { "train-stop", "rail-signal", "rail-chain-signal" } do
