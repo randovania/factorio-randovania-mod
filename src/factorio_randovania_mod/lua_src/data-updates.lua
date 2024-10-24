@@ -1,23 +1,28 @@
 local existing_tree = require("generated.existing-tree-repurpose")
 
+local tech_to_delete = {}
+
 for name, tech in pairs(data.raw["technology"]) do
     local dummy_pack = "impossible-science-pack"
     if existing_tree[name] then
         tech.hidden = false
-        tech.enabled = false
         tech.visible_when_disabled = true
         tech.prerequisites = existing_tree[name].prerequisites or {}
         dummy_pack = existing_tree[name].science_pack
     else
         tech.hidden = true
+        tech.hidden_in_factoriopedia = true
     end
     tech.research_trigger = nil
+    tech.enabled = false
     tech.unit = {
         count = 1,
         time = 60,
         ingredients = {{dummy_pack, 1}}
     }
 end
+
+local original_effects = {}
 
 function add_randovania_tech(param)
     ---@type data.TechnologyPrototype
@@ -37,8 +42,13 @@ function add_randovania_tech(param)
         prototype.icon = original.icon
         prototype.icons = original.icons
         prototype.icon_size = original.icon_size
-        prototype.effects = original.effects
+        prototype.effects = original_effects[param.take_effects_from] or original.effects
         prototype.localised_description = {"technology-description." .. param.take_effects_from}
+        prototype.essential = original.essential
+
+        -- Remove the effects, so Factoriopedia won't link the hidden tech
+        original.effects = nil
+        original_effects[param.take_effects_from] = prototype.effects
     end
     data:extend { prototype }
 end
