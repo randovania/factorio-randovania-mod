@@ -15,7 +15,7 @@ end
 
 local impossible_lab = table.deepcopy(data.raw["lab"]["lab"])
 impossible_lab.name = "impossible-lab"
-impossible_lab.inputs = {"impossible-science-pack"}
+impossible_lab.inputs = { "impossible-science-pack" }
 
 data:extend {
     {

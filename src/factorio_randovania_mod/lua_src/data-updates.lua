@@ -43,7 +43,7 @@ function add_randovania_tech(param)
         prototype.icons = original.icons
         prototype.icon_size = original.icon_size
         prototype.effects = original_effects[param.take_effects_from] or original.effects
-        prototype.localised_description = {"technology-description." .. param.take_effects_from}
+        prototype.localised_description = {"technology-description." .. param.take_effects_from:gsub("-%d+", "")}
         prototype.essential = original.essential
 
         -- Remove the effects, so Factoriopedia won't link the hidden tech
