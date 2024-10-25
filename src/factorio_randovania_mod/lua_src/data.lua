@@ -22,6 +22,7 @@ local kInitialRecipes = {
     "firearm-magazine",
     -- iron processing
     "iron-gear-wheel",
+    "iron-stick",
     "iron-chest",
     -- copper processing
     "copper-cable",
@@ -51,12 +52,17 @@ for _, name in ipairs(kRecipesWithNewTech) do
 end
 
 for _, name in ipairs(kInitialRecipes) do
-   data.raw["recipe"][name].enabled = true
-   data.raw["recipe"][name].hidden = nil
+    data.raw["recipe"][name].enabled = true
+    data.raw["recipe"][name].hidden = nil
 end
 
 ---- Change requirement to crafting a burner lab, so electronics isn't required to be super early
 data.raw["technology"]["automation-science-pack"].research_trigger.item = "burner-lab"
+
+---- Remove iron-stick from the many recipes that unlock it
+for _, name in pairs { "railway", "electric-energy-distribution-1", "concrete", "circuit-network" } do
+    remove_if(data.raw["technology"][name]["effects"], function(it) return it.recipe == "iron-stick" end)
+end
 
 ---- Unlock belts in logistic 1
 table.insert(
