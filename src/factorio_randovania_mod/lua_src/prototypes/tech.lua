@@ -9,6 +9,7 @@ local function make_tech(param)
         param.prerequisites = { param.cost_reference }
         param.cost_reference = nil
     end
+    param.randovania_custom_tech = true
     assert(param.unit)
     return param
 end
