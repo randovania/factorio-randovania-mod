@@ -131,11 +131,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project
-src/open_prime_rando/version.py
-
 # Deny certain files at root
+/.vscode
 /*.txt
 /*.json
 
+# Project
 src/factorio_randovania_mod/version.py
