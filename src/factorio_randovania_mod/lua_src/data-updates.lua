@@ -1,7 +1,5 @@
 local existing_tree = require("generated.existing-tree-repurpose")
 
-local tech_to_delete = {}
-
 for name, tech in pairs(data.raw["technology"]) do
     local dummy_pack = "impossible-science-pack"
     if existing_tree[name] then
