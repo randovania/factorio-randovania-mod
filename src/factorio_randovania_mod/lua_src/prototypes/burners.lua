@@ -4,13 +4,13 @@ local burner_lab = table.deepcopy(data.raw.lab.lab)
 burner_lab.name = "burner-lab"
 burner_lab.minable.result = "burner-lab"
 burner_lab.next_upgrade = "lab"
-burner_lab.module_specification = nil
+burner_lab.module_slots = nil
 burner_lab.energy_source = {
     type = "burner",
-    fuel_category = "chemical",
+    fuel_categories = {"chemical"},
     effectivity = 1,
     fuel_inventory_size = 1,
-    emissions_per_minute = 2,
+    emissions_per_minute = { pollution = 2 },
     light_flicker = {
         minimum_light_size = 1,
         light_intensity_to_size_coefficient = 0.25,
@@ -28,23 +28,21 @@ burner_lab.energy_source = {
     }
 }
 local function set_lab(layers, is_on)
-    layers[1].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab.png"
-    layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab.png"
+    layers[1].filename = "__randovania-assets__/graphics/entity/burner-lab/burner-lab.png"
 
     if is_on then
-        layers[3].filename = "__randovania-layout__/graphics/entity/burner-lab/burner-lab-light.png"
-        layers[3].hr_version.filename = "__randovania-layout__/graphics/entity/burner-lab/hr-burner-lab-light.png"
+        layers[3].filename = "__randovania-assets__/graphics/entity/burner-lab/burner-lab-light.png"
     end
 end
 
-burner_lab.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
+burner_lab.icon = "__randovania-assets__/graphics/icons/burner-lab.png"
 set_lab(burner_lab.on_animation.layers, true)
 set_lab(burner_lab.off_animation.layers, false)
 
 
 local lab_item = table.deepcopy(data.raw.item.lab)
 lab_item.name = "burner-lab"
-lab_item.icon = "__randovania-layout__/graphics/icons/burner-lab.png"
+lab_item.icon = "__randovania-assets__/graphics/icons/burner-lab.png"
 lab_item.place_result = "burner-lab"
 
 local lab_recipe = {
@@ -67,10 +65,10 @@ machine.minable.result = "burner-assembling-machine"
 machine.next_upgrade = "assembling-machine-1"
 machine.energy_source = {
     type = "burner",
-    fuel_category = "chemical",
+    fuel_categories = {"chemical"},
     effectivity = 1,
     fuel_inventory_size = 1,
-    emissions_per_minute = 4,
+    emissions_per_minute = { pollution = 4 },
     light_flicker = {
         minimum_light_size = 1,
         light_intensity_to_size_coefficient = 0.2,
@@ -87,14 +85,13 @@ machine.energy_source = {
         }
     }
 }
-machine.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
-machine.animation.layers[1].filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/burner-assembling-machine.png"
-machine.animation.layers[1].hr_version.filename = "__randovania-layout__/graphics/entity/burner-assembling-machine/hr-burner-assembling-machine.png"
+machine.icon = "__randovania-assets__/graphics/icons/burner-assembling-machine.png"
+machine.graphics_set.animation.layers[1].filename = "__randovania-assets__/graphics/entity/burner-assembling-machine/burner-assembling-machine.png"
 
 
 local machine_item = table.deepcopy(data.raw.item["assembling-machine-1"])
 machine_item.name = "burner-assembling-machine"
-machine_item.icon = "__randovania-layout__/graphics/icons/burner-assembling-machine.png"
+machine_item.icon = "__randovania-assets__/graphics/icons/burner-assembling-machine.png"
 machine_item.place_result = "burner-assembling-machine"
 
 local machine_recipe = {

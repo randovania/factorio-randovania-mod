@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import itertools
 import os
 from typing import TYPE_CHECKING
 
@@ -61,8 +62,6 @@ def get_localized_name(locale: configparser.ConfigParser, n: str) -> str:
 
 
 def ensure_locale_read(locale: configparser.ConfigParser, files: list[Path]) -> None:
-    filenames = [os.fspath(filename) for filename in files]
-    did_read = locale.read(filenames)
-    if did_read != filenames:
-        missing = set(filenames) - set(did_read)
-        raise FileNotFoundError(str(missing))
+    for file in files:
+        with file.open() as fp:
+            locale.read_file(itertools.chain(["[global]"], fp), source=os.fspath(file))

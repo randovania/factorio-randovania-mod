@@ -1,8 +1,12 @@
 {
-    "name": "randovania-layout",
-    "version": "0.0.1",
-    "title": "Randovania",
-    "author": "Randovania",
-    "factorio_version": "1.1",
-    "dependencies": ["base"]
-  }
+  "name": "randovania-layout",
+  "version": "0.0.1",
+  "title": "Randovania",
+  "author": "Randovania",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base",
+    "randovania-assets >= 0.1.0",
+    "! space-age"
+  ]
+}

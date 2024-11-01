@@ -11,12 +11,6 @@ from factorio_randovania_mod import creator
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--factorio-path",
-        required=True,
-        type=Path,
-        help="Path to where a Factorio installation can be found.",
-    )
-    parser.add_argument(
         "--output-path",
         required=True,
         type=Path,
@@ -71,7 +65,6 @@ def main() -> None:
 
     start = time.time()
     creator.create(
-        args.factorio_path,
         configuration,
         args.output_path,
     )

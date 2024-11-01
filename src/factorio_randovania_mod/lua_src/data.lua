@@ -6,27 +6,9 @@ local function remove_if(t, pred)
     end
 end
 
-local function set_recipe_field(recipe, field, value)
-    if recipe.normal then
-        recipe.normal[field] = value
-    else
-        recipe[field] = value
-    end
-    if recipe.expensive then
-        recipe.expensive[field] = value
-    end
-end
-
 local kRecipesWithNewTech = {
     "transport-belt",
-    "electronic-circuit",
     "light-armor",
-    "inserter",
-    "automation-science-pack",
-    -- steam power
-    "offshore-pump",
-    "boiler",
-    "steam-engine"
 }
 
 local kInitialRecipes = {
@@ -36,13 +18,11 @@ local kInitialRecipes = {
     "iron-plate",
     "stone-brick",
     -- military
-    "radar",
     "pistol",
     "firearm-magazine",
-    "repair-pack",
     -- iron processing
-    "iron-stick",
     "iron-gear-wheel",
+    "iron-stick",
     "iron-chest",
     -- copper processing
     "copper-cable",
@@ -55,7 +35,6 @@ local kInitialRecipes = {
     -- burner tooling
     "burner-inserter",
     "burner-mining-drill",
-    "electric-mining-drill",
     -- science
     "lab"
 }
@@ -69,12 +48,21 @@ require("prototypes.modules")
 ---- Lock all initial recipes
 
 for _, name in ipairs(kRecipesWithNewTech) do
-    set_recipe_field(data.raw["recipe"][name], "enabled", false)
+    data.raw["recipe"][name].enabled = false
 end
 
--- for _, name in ipairs(kInitialRecipes) do
---     set_recipe_field(data.raw["recipe"][name], "enabled", false)
--- end
+for _, name in ipairs(kInitialRecipes) do
+    data.raw["recipe"][name].enabled = true
+    data.raw["recipe"][name].hidden = nil
+end
+
+---- Change requirement to crafting a burner lab, so electronics isn't required to be super early
+data.raw["technology"]["automation-science-pack"].research_trigger.item = "burner-lab"
+
+---- Remove iron-stick from the many recipes that unlock it
+for _, name in pairs { "railway", "electric-energy-distribution-1", "concrete", "circuit-network" } do
+    remove_if(data.raw["technology"][name]["effects"], function(it) return it.recipe == "iron-stick" end)
+end
 
 ---- Unlock belts in logistic 1
 table.insert(
@@ -86,14 +74,6 @@ table.insert(
     }
 )
 
----- Repurpose electronics for electronic-circuit
-data.raw["technology"]["electronics"].effects = {
-    {
-        recipe = "electronic-circuit",
-        type = "unlock-recipe"
-    }
-}
-
 ---- Move Long Handed Inserter for it's own tech
 remove_if(
     data.raw["technology"]["automation"]["effects"],
@@ -101,6 +81,20 @@ remove_if(
         return it.recipe == "long-handed-inserter"
     end
 )
+
+-- Adjust the starting techs from unlocking too much
+remove_if(
+    data.raw["technology"]["steam-power"]["effects"],
+    function(it)
+        return it.recipe == "pipe" or it.recipe == "pipe-to-ground"
+    end
+)
+data.raw["technology"]["electronics"]["effects"] = {
+    {
+        type = "unlock-recipe",
+        recipe = "electronic-circuit"
+    },
+}
 
 ---- Merge automated rail into Railway
 for _, recipe_name in ipairs { "train-stop", "rail-signal", "rail-chain-signal" } do
@@ -213,8 +207,8 @@ remove_if(
 data.raw["technology"]["fluid-handling"].icon = "__base__/graphics/icons/fluid/barreling/empty-barrel.png"
 data.raw["technology"]["fluid-handling"].icon_size = 64
 data.raw["recipe"]["fluid-wagon"].ingredients = {
-    { "iron-gear-wheel", 10 },
-    { "iron-plate",      20 },
-    { "steel-plate",     21 },
-    { "pipe",            8 }
+    { type = "item", name = "iron-gear-wheel", amount = 10 },
+    { type = "item", name = "iron-plate",      amount = 20 },
+    { type = "item", name = "steel-plate",     amount = 21 },
+    { type = "item", name = "pipe",            amount = 8 }
 }

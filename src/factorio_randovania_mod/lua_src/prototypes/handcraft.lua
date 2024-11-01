@@ -15,12 +15,12 @@ local handcraftIcon = {
     shift = { 8, 8 }
 }
 
+---comment
+---@param params data.RecipePrototype
+---@return data.RecipePrototype
 local function addHandcraftingTweaks(params)
-    params.icons = {
-        params.icon,
-        handcraftIcon
-    }
-    params.icon = nil
+    assert(params.icon == nil)
+    table.insert(params.icons, handcraftIcon)
     params.category = "hand-crafting"
     params.allow_decomposition = false
     params.allow_as_intermediate = false
@@ -38,20 +38,19 @@ data:extend {
         energy_required = 30,
         ingredients =
         {
-            { "iron-gear-wheel",    1 },
-            { "pipe",               2 },
-            { "iron-plate",         2 },
-            { "steel-plate",        2 },
-            { "coal",               20 },
-            { "electronic-circuit", 7 },
+            { type = "item", name = "iron-gear-wheel",    amount = 1 },
+            { type = "item", name = "pipe",               amount = 2 },
+            { type = "item", name = "iron-plate",         amount = 2 },
+            { type = "item", name = "steel-plate",        amount = 2 },
+            { type = "item", name = "coal",               amount = 20 },
+            { type = "item", name = "electronic-circuit", amount = 7 },
         },
-        result = "construction-robot",
+        results = {
+            { type = "item", name = "construction-robot", amount = 1},
+        },
 
-        icon =
-        {
-            icon = "__base__/graphics/icons/construction-robot.png",
-            icon_size = 64,
-            icon_mipmaps = 4
+        icons = {
+            { icon = "__base__/graphics/icons/construction-robot.png" },
         },
         order = "a[robot]-b[construction-robot]"
     },
@@ -63,21 +62,22 @@ data:extend {
         energy_required = 30,
         ingredients =
         {
-            { "iron-gear-wheel",    1 },
-            { "pipe",               2 },
-            { "iron-plate",         2 },
-            { "steel-plate",        2 },
-            { "coal",               20 },
-            { "electronic-circuit", 5 },
-            { "advanced-circuit",   2 }
+            { type = "item", name = "iron-gear-wheel",    amount = 1 },
+            { type = "item", name = "pipe",               amount = 2 },
+            { type = "item", name = "iron-plate",         amount = 2 },
+            { type = "item", name = "steel-plate",        amount = 2 },
+            { type = "item", name = "coal",               amount = 20 },
+            { type = "item", name = "electronic-circuit", amount = 5 },
+            { type = "item", name = "advanced-circuit",   amount = 2 }
         },
-        result = "logistic-robot",
+        results = {
+            { type = "item", name = "logistic-robot",     amount = 1},
+        },
 
-        icon =
-        {
-            icon = "__base__/graphics/icons/logistic-robot.png",
-            icon_size = 64,
-            icon_mipmaps = 4
+        icons = {
+            {
+                icon = "__base__/graphics/icons/logistic-robot.png",
+            }
         },
         order = "a[robot]-b[logistic-robot]"
     },

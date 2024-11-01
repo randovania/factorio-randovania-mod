@@ -13,7 +13,8 @@ class CustomTechTreeItem(typing.TypedDict):
     name: str
     icon_size: typing.NotRequired[int]
     icon: str
-    costs: TechCosts
+    costs: typing.NotRequired[TechCosts]
+    research_trigger: typing.NotRequired[dict]
     prerequisites: list[str] | None
     take_effects_from: typing.NotRequired[str]
 

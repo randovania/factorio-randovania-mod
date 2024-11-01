@@ -1,3 +1,6 @@
+---comment
+---@param param data.TechnologyPrototype
+---@return data.TechnologyPrototype
 local function make_tech(param)
     param.type = "technology"
     param.order = param.order or "d-b"
@@ -6,15 +9,22 @@ local function make_tech(param)
         param.prerequisites = { param.cost_reference }
         param.cost_reference = nil
     end
+    param.randovania_custom_tech = true
+    assert(param.unit)
     return param
 end
+
+-- The game requires that every science pack has at least one lab capable of using it.
+-- So we create a new lab just for it, but add no ways of adquiring such lab.
+local impossible_lab = table.deepcopy(data.raw["lab"]["lab"])
+impossible_lab.name = "impossible-lab"
+impossible_lab.inputs = { "impossible-science-pack" }
 
 data:extend {
     {
         type = "tool",
         name = "impossible-science-pack",
         icon = "__core__/graphics/icons/technology/effect/effect-deconstruction.png",
-        icon_size = 64, icon_mipmaps = 1,
         subgroup = "science-pack",
         order = "z[automation-science-pack]",
         stack_size = 20,
@@ -22,6 +32,7 @@ data:extend {
         durability_description_key = "description.science-pack-remaining-amount-key",
         durability_description_value = "description.science-pack-remaining-amount-value"
     },
+    impossible_lab,
 
     make_tech {
         cost_reference = "automation",
@@ -32,8 +43,7 @@ data:extend {
                 type = "unlock-recipe"
             }
         },
-        icon = "__randovania-layout__/graphics/technology/long-handed-inserter.png",
-        icon_mipmaps = 4,
+        icon = "__randovania-assets__/graphics/technology/long-handed-inserter.png",
         icon_size = 256
     },
     make_tech {
@@ -45,8 +55,7 @@ data:extend {
                 type = "unlock-recipe"
             }
         },
-        icon = "__randovania-layout__/graphics/technology/longer-handed-inserter.png",
-        icon_mipmaps = 4,
+        icon = "__randovania-assets__/graphics/technology/longer-handed-inserter.png",
         icon_size = 256
     },
     make_tech {
@@ -67,12 +76,16 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/oil-processing.png",
-        icon_mipmaps = 4,
         icon_size = 256
     },
     make_tech {
-        cost_reference = "oil-processing",
         name = "solid-fuel",
+        unit = {
+            count = 100,
+            ingredients = { { "automation-science-pack", 1 }, { "logistic-science-pack", 1 } },
+            time = 30
+        },
+        prerequisites = { "oil-processing" },
         effects = {
             {
                 recipe = "solid-fuel-from-heavy-oil",
@@ -88,7 +101,6 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/oil-processing.png",
-        icon_mipmaps = 4,
         icon_size = 256
     },
     make_tech {
@@ -101,7 +113,6 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/heavy-armor.png",
-        icon_mipmaps = 4,
         icon_size = 256
     },
     make_tech {
@@ -114,14 +125,13 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/electric-energy-distribution-1.png",
-        icon_mipmaps = 4,
         icon_size = 256
     },
     make_tech {
         name = "inserter",
         unit = {
             count = 20,
-            ingredients = { },
+            ingredients = {},
             time = 20
         },
         effects = {
@@ -131,51 +141,8 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/fast-inserter.png",
-        icon_mipmaps = 4,
         icon_size = 256,
 
-    },
-    make_tech {
-        name = "steam-power",
-        unit = {
-            count = 50,
-            ingredients = { },
-            time = 20
-        },
-        effects = {
-            {
-                type = "unlock-recipe",
-                recipe = "offshore-pump"
-            },
-            {
-                type = "unlock-recipe",
-                recipe = "boiler"
-            },
-            {
-                type = "unlock-recipe",
-                recipe = "steam-engine"
-            }
-        },
-        icon = "__base__/graphics/icons/steam-engine.png",
-        icon_mipmaps = 4,
-        icon_size = 64
-    },
-    make_tech {
-        name = "automation-science-pack",
-        unit = {
-            count = 10,
-            ingredients = { },
-            time = 10
-        },
-        effects = {
-            {
-                type = "unlock-recipe",
-                recipe = "automation-science-pack"
-            }
-        },
-        icon = "__base__/graphics/technology/automation-science-pack.png",
-        icon_mipmaps = 4,
-        icon_size = 256
     },
     make_tech {
         cost_reference = "inserter-capacity-bonus-2",
@@ -187,22 +154,20 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/inserter-capacity.png",
-        icon_mipmaps = 4,
         icon_size = 256,
         max_level = "infinite",
         upgrade = true
     },
     make_tech {
         cost_reference = "inserter-capacity-bonus-1",
-        name = "stack-inserter-capacity-bonus",
+        name = "bulk-inserter-capacity-bonus",
         effects = {
             {
-                type = "stack-inserter-capacity-bonus",
+                type = "bulk-inserter-capacity-bonus",
                 modifier = 2
             }
         },
         icon = "__base__/graphics/technology/inserter-capacity.png",
-        icon_mipmaps = 4,
         icon_size = 256,
         max_level = "infinite",
         upgrade = true
@@ -217,7 +182,6 @@ data:extend {
             }
         },
         icons = util.technology_icon_constant_productivity("__base__/graphics/technology/research-speed.png"),
-        icon_mipmaps = 4,
         icon_size = 256,
         max_level = "infinite",
         upgrade = true
@@ -236,7 +200,6 @@ data:extend {
             }
         },
         icon = "__base__/graphics/technology/fluid-handling.png",
-        icon_mipmaps = 4,
         icon_size = 256
     }
 }
