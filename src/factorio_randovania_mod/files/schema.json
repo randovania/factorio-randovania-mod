@@ -42,76 +42,9 @@
                         "type": "integer",
                         "default": 256
                     },
-                    "research_trigger": {
-                        "description": "Unlocked via performing some action. See https://lua-api.factorio.com/latest/types/TechnologyTrigger.html",
-                        "type": "object",
-                        "oneOf": [
-                            {
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "const": "mine-entity"
-                                    },
-                                    "entity": {
-                                        "type": "string"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": ["type", "entity"]
-                            },
-                            {
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "const": "craft-item"
-                                    },
-                                    "item": {
-                                        "type": "string"
-                                    },
-                                    "count": {
-                                        "type": "integer"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": ["type", "item"]
-                            },
-                            {
-                                "properties": {
-                                    "type": {
-                                        "type": "string",
-                                        "const": "send-item-to-orbit"
-                                    },
-                                    "item": {
-                                        "type": "string"
-                                    }
-                                },
-                                "additionalProperties": false,
-                                "required": ["type", "item"]
-                            }
-                        ]
-                    },
-                    "cost": {
-                        "description": "How much this technology will cost to research.",
-                        "type": "object",
-                        "properties": {
-                            "count": {
-                                "description": "How many times the laboratory needs to 'craft'",
-                                "type": "integer"
-                            },
-                            "time": {
-                                "description": "How long it takes the laboratory needs to 'craft'",
-                                "type": "integer"
-                            },
-                            "ingredients": {
-                                "description": "Which science packs are required to 'craft'. Always one of each listed.",
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required": ["count", "time", "ingredients"],
-                        "additionalProperties": false
+                    "cost_reference": {
+                        "description": "The technology to use for research cost and prerequisites",
+                        "type": "string"
                     },
                     "prerequisites": {
                         "description": "List of which technologies must be researched before",
@@ -129,15 +62,7 @@
                     }
                 },
                 "additionalProperties": false,
-                "oneOf": [
-                    {
-                        "required": ["research_trigger"]
-                    },
-                    {
-                        "required": ["cost"]
-                    }
-                ],
-                "required": ["locale_name", "description", "icon", "prerequisites", "unlocks"]
+                "required": ["locale_name", "description", "icon","prerequisites", "unlocks"]
             }
         },
         "recipes": {

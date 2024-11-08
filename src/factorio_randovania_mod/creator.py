@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import collections
-import configparser
 import shutil
 import typing
 from pathlib import Path
 
 from factorio_randovania_mod import schema
-from factorio_randovania_mod.locale_lib import ensure_locale_read
-from factorio_randovania_mod.lua_util import wrap, wrap_array_pretty
+from factorio_randovania_mod.lua_util import wrap
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
@@ -20,48 +18,35 @@ _TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
 
 
 def process_technology(
-    output_locale: configparser.ConfigParser,
-    local_unlocks: dict[str, list[str]],
     progressive_sources: dict[tuple[str, ...], list[str]],
     tech: ConfigurationTechnologiesItem,
 ) -> CustomTechTreeItem:
     """
     Process an entry of patch_data["technologies"]
-    :param output_locale:
-    :param local_unlocks:
     :param progressive_sources:
     :param tech:
     :return: A new entry for tech-tree.lua
     """
     tech_name = tech["tech_name"]
-    output_locale["technology-name"][tech_name] = tech["locale_name"]
-    output_locale["technology-description"][tech_name] = tech["description"]
 
     new_tech: CustomTechTreeItem = {
         "name": tech_name,
-        "icon": tech["icon"],
+        "localised_name": tech["locale_name"],
         "prerequisites": tech["prerequisites"] if tech["prerequisites"] else None,
-        # "fake_effects": tech["fake_effects"],
+        "cost_reference": tech["cost_reference"],
     }
-    if "cost" in tech:
-        new_tech["costs"] = {
-            "count": tech["cost"]["count"],
-            "time": tech["cost"]["time"],
-            "ingredients": [(it, 1) for it in tech["cost"]["ingredients"]],
-        }
-    else:
-        new_tech["research_trigger"] = tech["research_trigger"]
-
-    if "icon_size" in tech:
-        new_tech["icon_size"] = tech["icon_size"]
 
     if len(tech["unlocks"]) == 1:
         new_tech["take_effects_from"] = tech["unlocks"][0]
-        del output_locale["technology-description"][tech_name]
-
-    elif tech["unlocks"]:
-        local_unlocks[tech_name] = tech["unlocks"]
-        progressive_sources[tuple(tech["unlocks"])].append(tech_name)
+    else:
+        new_tech["visual_data"] = {
+            "icon": tech["icon"],
+            "icon_size": tech["icon_size"],
+            "localised_description": tech["description"],
+        }
+        if tech["unlocks"]:
+            # local_unlocks[tech_name] = tech["unlocks"]
+            progressive_sources[tuple(tech["unlocks"])].append(tech_name)
 
     return new_tech
 
@@ -69,7 +54,6 @@ def process_technology(
 def generate_output(
     output_path: Path,
     generated_files: GeneratedFiles,
-    locale: configparser.ConfigParser,
 ) -> None:
     """
     Generates all files for the mod.
@@ -84,15 +68,13 @@ def generate_output(
     def generate_file(name: str, content: str) -> None:
         output_path.joinpath("generated", name).write_text("return " + content)
 
-    generate_file("tech-tree.lua", wrap_array_pretty(generated_files["tech_tree"]))
-    generate_file("local-unlocks.lua", wrap(generated_files["local_unlocks"]))
-    generate_file("existing-tree-repurpose.lua", wrap(generated_files["existing_tree_repurpose"]))
-
-    generate_file("starting-tech.lua", wrap_array_pretty(generated_files["starting_tech"]))
-    generate_file("custom-recipes.lua", wrap_array_pretty(generated_files["custom_recipes"]))
-
-    with output_path.joinpath("locale/en/strings.cfg").open("w") as f:
-        locale.write(f, space_around_delimiters=False)
+    generate_file("json-data.lua", wrap(generated_files))
+    # generate_file("tech-tree.lua", wrap_array_pretty(generated_files["tech_tree"]))
+    # generate_file("local-unlocks.lua", wrap(generated_files["local_unlocks"]))
+    # generate_file("existing-tree-repurpose.lua", wrap(generated_files["existing_tree_repurpose"]))
+    #
+    # generate_file("starting-tech.lua", wrap_array_pretty(generated_files["starting_tech"]))
+    # generate_file("custom-recipes.lua", wrap_array_pretty(generated_files["custom_recipes"]))
 
 
 def create(patch_data: dict, output_folder: Path) -> None:
@@ -101,19 +83,10 @@ def create(patch_data: dict, output_folder: Path) -> None:
 
     configuration = schema.validate(patch_data)
 
-    locale = configparser.ConfigParser()
-    ensure_locale_read(
-        locale,
-        [
-            _TEMPLATE_PATH.joinpath("locale/en/strings.cfg"),
-        ],
-    )
-
     progressive_sources: dict[tuple[str, ...], list[str]] = collections.defaultdict(list)
     generated_files: GeneratedFiles = {
         "tech_tree": [],
-        "local_unlocks": {},
-        "existing_tree_repurpose": {},
+        "progressive_data": [],
         "starting_tech": configuration["starting_tech"],
         "custom_recipes": configuration["recipes"],
     }
@@ -121,8 +94,6 @@ def create(patch_data: dict, output_folder: Path) -> None:
     for tech in configuration["technologies"]:
         generated_files["tech_tree"].append(
             process_technology(
-                locale,
-                generated_files["local_unlocks"],
                 progressive_sources,
                 tech,
             )
@@ -131,15 +102,11 @@ def create(patch_data: dict, output_folder: Path) -> None:
     # TODO: add the offworld research to `existing_tree_repurpose`
 
     for progressive_sequence, sources in progressive_sources.items():
-        for i, tech_name in enumerate(progressive_sequence):
-            if i == 0:
-                prerequisites = sources
-            else:
-                prerequisites = [progressive_sequence[i - 1]]
-
-            generated_files["existing_tree_repurpose"][tech_name] = {
-                "science_pack": "impossible-science-pack",
-                "prerequisites": prerequisites,
+        generated_files["progressive_data"].append(
+            {
+                "locations": list(sources),
+                "unlocked": list(progressive_sequence),
             }
+        )
 
-    generate_output(output_path, generated_files, locale)
+    generate_output(output_path, generated_files)

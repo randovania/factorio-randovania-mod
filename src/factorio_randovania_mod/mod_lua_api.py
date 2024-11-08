@@ -9,14 +9,19 @@ class TechCosts(typing.TypedDict):
     ingredients: list[tuple[str, int]]
 
 
+class TechTreeVisualData(typing.TypedDict):
+    icon: str
+    icon_size: int
+    localised_description: str
+
+
 class CustomTechTreeItem(typing.TypedDict):
     name: str
-    icon_size: typing.NotRequired[int]
-    icon: str
-    costs: typing.NotRequired[TechCosts]
-    research_trigger: typing.NotRequired[dict]
+    localised_name: str
     prerequisites: list[str] | None
     take_effects_from: typing.NotRequired[str]
+    visual_data: typing.NotRequired[TechTreeVisualData]
+    cost_reference: str
 
 
 class TechRepurpose(typing.TypedDict):
@@ -24,9 +29,13 @@ class TechRepurpose(typing.TypedDict):
     prerequisites: list[str]
 
 
+class ProgressiveEntry(typing.TypedDict):
+    locations: list[str]
+    unlocked: list[str]
+
+
 class GeneratedFiles(typing.TypedDict):
     tech_tree: list[CustomTechTreeItem]
-    local_unlocks: dict[str, list[str]]
-    existing_tree_repurpose: dict[str, TechRepurpose]
+    progressive_data: list[ProgressiveEntry]
     starting_tech: list[str]
     custom_recipes: list[ConfigurationRecipesItem]

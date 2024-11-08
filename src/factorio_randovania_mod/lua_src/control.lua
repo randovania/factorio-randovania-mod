@@ -1,5 +1,13 @@
-local LOCAL_UNLOCKS = require("generated.local-unlocks")
-local STARTING_TECH = require("generated.starting-tech")
+local layout = require("layout")
+layout_data = layout.get_data()
+
+local LOCAL_UNLOCKS = {}
+
+for _, progressive in pairs(layout_data.progressive_data) do
+    for _, location in pairs(progressive.locations) do
+        LOCAL_UNLOCKS[location] = progressive.unlocked
+    end
+end
 
 local playersAlreadyWarned = {}
 local _bannedCategoriesForFreebies = {
@@ -158,7 +166,7 @@ script.on_init(function()
     }
 
     local player_tech = game.forces.player.technologies
-    for _, tech in ipairs(STARTING_TECH) do
+    for _, tech in ipairs(layout_data.starting_tech) do
         player_tech[tech].researched = true
         give_freebies(player_tech[tech])
     end
