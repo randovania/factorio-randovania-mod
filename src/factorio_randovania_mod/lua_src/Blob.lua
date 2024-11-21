@@ -252,15 +252,6 @@ Blob.new = function(string, offset)
   return blob
 end
 
--- Create a new blob from the content of the given file
-Blob.load = function(filename)
-  local f = assert(io.open(filename, "rb"), "Could not open file ".. filename)
-  local buffer = f:read("*all")
-  f:close()
-  local blob = Blob.new(buffer)
-  return blob
-end
-
 --- Split off an existing blob at the current position of this blob.
 --- Note that this does not copy the content of the given blob.
 --- If a length is given, advance the original blob by that many bytes

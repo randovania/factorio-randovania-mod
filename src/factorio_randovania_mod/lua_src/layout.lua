@@ -193,7 +193,11 @@ end
 ---@return LayoutData|false
 function layout.get_data()
     if layout._cache == nil then
-        local raw = base64.decode(require("generated.binary-data")) --[[@as string]]
+        local layout_string = settings.startup["randovania-layout-string"].value --[[@as string]]
+        if layout_string == "" then
+            return false
+        end
+        local raw = base64.decode(layout_string)
         layout._cache = decode_data(raw)
     end
     return layout._cache

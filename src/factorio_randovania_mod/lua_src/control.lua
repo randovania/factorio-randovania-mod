@@ -1,11 +1,16 @@
 local layout = require("layout")
-layout_data = layout.get_data()
 
 local LOCAL_UNLOCKS = {}
 
-for _, progressive in pairs(layout_data.progressive_data) do
-    for _, location in pairs(progressive.locations) do
-        LOCAL_UNLOCKS[location] = progressive.unlocked
+local has_layout, layout_data = pcall(layout.get_data)
+local starting_tech = {}
+
+if has_layout and layout_data then
+    starting_tech = layout_data.starting_tech
+    for _, progressive in pairs(layout_data.progressive_data) do
+        for _, location in pairs(progressive.locations) do
+            LOCAL_UNLOCKS[location] = progressive.unlocked
+        end
     end
 end
 
@@ -166,7 +171,7 @@ script.on_init(function()
     }
 
     local player_tech = game.forces.player.technologies
-    for _, tech in ipairs(layout_data.starting_tech) do
+    for _, tech in ipairs(starting_tech) do
         player_tech[tech].researched = true
         give_freebies(player_tech[tech])
     end
@@ -189,3 +194,35 @@ local function data_sync()
 end
 
 commands.add_command("randovania-sync", "Exports all the data needed by Randovania", data_sync)
+
+script.on_event(defines.events.on_player_created, function(event)
+    local player = game.get_player(event.player_index)
+    if not player then return end
+
+    local error_message
+
+    if has_layout and not layout_data then
+        -- Layout string not set
+        error_message = {"randovania.invalid_layout_missing"}
+    elseif not has_layout then
+        -- Invalid layout string
+        error_message = {"randovania.invalid_layout_bad", layout_data}
+    else
+        return
+    end
+
+    local screen_element = player.gui.screen
+    local main_frame = screen_element.add{
+        type="frame",
+        name="rdv_main_frame",
+        caption={"randovania.invalid_layout_title"},
+        direction="vertical",
+    }
+    -- main_frame.style.size = {385, 165}
+    main_frame.auto_center = true
+    
+    main_frame.add{type="label", name="intro", caption={"randovania.invalid_layout_intro"}}
+    main_frame.add{type="label", name="message", caption=error_message}
+    main_frame.add{type="line", name="footer_line"}
+    main_frame.add{type="label", name="footer", caption={"randovania.invalid_layout_footer"}}.style.single_line = false
+end)

@@ -1,5 +1,10 @@
 local layout = require("layout")
-layout_data = layout.get_data()
+
+local has_layout, layout_data = pcall(layout.get_data)
+if not has_layout or not layout_data then
+    print("Unable to load layout data:", layout_data)
+    return
+end
 
 local existing_tree = {}
 
