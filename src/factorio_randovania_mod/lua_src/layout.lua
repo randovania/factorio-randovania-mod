@@ -74,6 +74,7 @@ end
 
 local base64 = require("base64")
 local Blob = require("Blob")
+local LibDeflate = require("LibDeflate")
 
 local layout = {}
 
@@ -163,10 +164,18 @@ end
 ---@param data string
 ---@return LayoutData
 local function decode_data(data)
-    local blob = Blob.new(data)
-    local version = blob:unpack("I2")
+    local blob_header = Blob.new(data)
+    local version = blob_header:unpack("I2")
     assert(version == 1, "Randovania game for a different version of the mod")
-    assert(decode_string(blob) == mods["randovania-layout"], "Randovania game for a different version of the mod")
+    
+    local expected_version = decode_string(blob_header)
+    if settings.startup["randovania-enforce-version"].value and mods then
+        assert(expected_version == mods["randovania-layout"], "Randovania game for a different version of the mod")
+    end
+    local compressed_size = blob_header:unpack("I4")
+    
+    local decompressed = LibDeflate:DecompressZlib(blob_header:bytes(compressed_size))
+    local blob = Blob.new(decompressed)
 
     local layout_data = {
         tech_tree = {},

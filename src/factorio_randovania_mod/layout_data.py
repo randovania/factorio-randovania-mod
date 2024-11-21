@@ -23,31 +23,41 @@ TechTreeEntry = construct.Struct(
     cost_reference=PrefixString,
 )
 
-LayoutData = construct.Struct(
+
+LayoutData = construct.FocusedSeq(
+    "data",
     schema_version=construct.Const(1, Short),
     mod_version=construct.Const(mod_version(), PrefixString),
-    tech_tree=construct.PrefixedArray(Short, TechTreeEntry),
-    progressive_data=construct.PrefixedArray(
-        Short,
-        construct.Struct(
-            locations=PrefixStringArray,
-            unlocked=PrefixStringArray,
-        ),
-    ),
-    custom_recipes=construct.PrefixedArray(
-        Short,
-        construct.Struct(
-            recipe_name=PrefixString,
-            category=PrefixString,
-            ingredients=construct.PrefixedArray(
-                Short,
-                construct.Struct(
-                    type=IngredientTypeEnum,
-                    name=PrefixString,
-                    amount=Short,
+    data=construct.Prefixed(
+        construct.Int32ul,
+        construct.Compressed(
+            construct.Struct(
+                tech_tree=construct.PrefixedArray(Short, TechTreeEntry),
+                progressive_data=construct.PrefixedArray(
+                    Short,
+                    construct.Struct(
+                        locations=PrefixStringArray,
+                        unlocked=PrefixStringArray,
+                    ),
                 ),
+                custom_recipes=construct.PrefixedArray(
+                    Short,
+                    construct.Struct(
+                        recipe_name=PrefixString,
+                        category=PrefixString,
+                        ingredients=construct.PrefixedArray(
+                            Short,
+                            construct.Struct(
+                                type=IngredientTypeEnum,
+                                name=PrefixString,
+                                amount=Short,
+                            ),
+                        ),
+                    ),
+                ),
+                starting_tech=PrefixStringArray,
             ),
+            "zlib",
         ),
     ),
-    starting_tech=PrefixStringArray,
 )
