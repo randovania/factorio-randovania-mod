@@ -1,5 +1,4 @@
 local layout = require("layout")
-
 layout_data = layout.get_data()
 
 local existing_tree = {}
@@ -87,7 +86,14 @@ data:extend(new_tech)
 for _, custom_recipe in pairs(layout_data.custom_recipes) do
     local recipe = data.raw["recipe"][custom_recipe.recipe_name]
     recipe.category = custom_recipe.category
-    recipe.ingredients = custom_recipe.ingredients
+    recipe.ingredients = {}
+    for i, ingredient in pairs(custom_recipe.ingredients) do
+        recipe.ingredients[i] = {
+            type = ingredient.is_fluid and "fluid" or "item",
+            name = ingredient.name,
+            amount = ingredient.amount,
+        }
+    end
 end
 
 -- Make productivity modules work everywhere

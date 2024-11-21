@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+import base64
 import collections
+import json
 import shutil
 import typing
 from pathlib import Path
 
 from factorio_randovania_mod import schema
+from factorio_randovania_mod.layout_data import LayoutData
 from factorio_randovania_mod.lua_util import wrap
+from factorio_randovania_mod.mod_lua_api import mod_version
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
@@ -32,8 +36,10 @@ def process_technology(
     new_tech: CustomTechTreeItem = {
         "name": tech_name,
         "localised_name": tech["locale_name"],
-        "prerequisites": tech["prerequisites"] if tech["prerequisites"] else None,
+        "prerequisites": tech["prerequisites"],
         "cost_reference": tech["cost_reference"],
+        "take_effects_from": "",
+        "visual_data": None,
     }
 
     if len(tech["unlocks"]) == 1:
@@ -59,22 +65,20 @@ def generate_output(
     Generates all files for the mod.
     :param output_path: Where to place the output
     :param generated_files: Data for generating all lua files
-    :param locale: Used as template
     :return:
     """
     shutil.copytree(_TEMPLATE_PATH, output_path)
+    info_json = json.loads(output_path.joinpath("info.json").read_text())
+    info_json["version"] = mod_version()
+    output_path.joinpath("info.json").write_text(json.dumps(info_json, indent=4))
+
     output_path.joinpath("generated").mkdir()
 
     def generate_file(name: str, content: str) -> None:
         output_path.joinpath("generated", name).write_text("return " + content)
 
-    generate_file("json-data.lua", wrap(generated_files))
-    # generate_file("tech-tree.lua", wrap_array_pretty(generated_files["tech_tree"]))
-    # generate_file("local-unlocks.lua", wrap(generated_files["local_unlocks"]))
-    # generate_file("existing-tree-repurpose.lua", wrap(generated_files["existing_tree_repurpose"]))
-    #
-    # generate_file("starting-tech.lua", wrap_array_pretty(generated_files["starting_tech"]))
-    # generate_file("custom-recipes.lua", wrap_array_pretty(generated_files["custom_recipes"]))
+    binary_data = base64.b64encode(LayoutData.build(generated_files)).decode("ascii")
+    generate_file("binary-data.lua", wrap(binary_data))
 
 
 def create(patch_data: dict, output_folder: Path) -> None:

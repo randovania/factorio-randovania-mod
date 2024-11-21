@@ -25,6 +25,8 @@ dynamic = ["version"]
 dependencies = [
     # For validating the schema
     "jsonschema",
+    # For encoding data to be sent to Lua
+    "construct",
 ]
 
 # Entry Points for PyInstaller

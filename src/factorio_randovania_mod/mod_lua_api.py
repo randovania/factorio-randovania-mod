@@ -1,6 +1,11 @@
+from __future__ import annotations
+
 import typing
 
-from factorio_randovania_mod.configuration import ConfigurationRecipesItem
+from factorio_randovania_mod import version
+
+if typing.TYPE_CHECKING:
+    from factorio_randovania_mod.configuration import ConfigurationRecipesItem
 
 
 class TechCosts(typing.TypedDict):
@@ -18,9 +23,9 @@ class TechTreeVisualData(typing.TypedDict):
 class CustomTechTreeItem(typing.TypedDict):
     name: str
     localised_name: str
-    prerequisites: list[str] | None
-    take_effects_from: typing.NotRequired[str]
-    visual_data: typing.NotRequired[TechTreeVisualData]
+    prerequisites: list[str]
+    take_effects_from: str
+    visual_data: TechTreeVisualData | None
     cost_reference: str
 
 
@@ -37,5 +42,11 @@ class ProgressiveEntry(typing.TypedDict):
 class GeneratedFiles(typing.TypedDict):
     tech_tree: list[CustomTechTreeItem]
     progressive_data: list[ProgressiveEntry]
-    starting_tech: list[str]
     custom_recipes: list[ConfigurationRecipesItem]
+    starting_tech: list[str]
+
+
+def mod_version() -> str:
+    """Returns the required mod version for this version of the package"""
+    base_version = version.__version_tuple__
+    return f"{base_version[0]}.{base_version[1]}.{base_version[2]}"

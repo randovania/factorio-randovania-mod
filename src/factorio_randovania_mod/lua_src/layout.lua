@@ -18,9 +18,9 @@ do
     ---@field localised_name string
     ---The prerequisites of the new tech
     ---@field prerequisites string[]
-    ---Take the visual data from the given tech 
+    ---Take the visual data from the given tech
     ---@field take_effects_from? string
-    ---Visual data 
+    ---Visual data
     ---@field visual_data? TechTreeVisualData
     ---Take the tech cost of the given tech
     ---@field cost_reference string
@@ -37,13 +37,24 @@ do
     }
 
     ---Tweaking some existing recipe
+    ---@class RecipeIngredientEntry
+    ---If the ingredient is a fluid ingredient
+    ---@field is_fluid boolean
+    ---The name of the ingredient. 
+    ---@field name string
+    ---The new amount
+    ---@field amount integer
+    local recipe_ingredient_entry = {
+    }
+
+    ---Tweaking some existing recipe
     ---@class RecipeTweakEntry
     ---The name of the recipe to change
     ---@field recipe_name string
     ---The new category
     ---@field category string
     ---The new ingredients
-    ---@field ingredients (data.FluidIngredientPrototype|data.ItemIngredientPrototype)[]
+    ---@field ingredients RecipeIngredientEntry[]
     local recipe_tweak_entry = {
     }
 
@@ -61,13 +72,129 @@ do
     }
 end
 
+local base64 = require("base64")
+local Blob = require("Blob")
+
 local layout = {}
 
----Returns the data for configuring the randomizer.
+---comment
+---@param blob Blob
+---@return integer
+local function decode_length(blob)
+    return blob:unpack("I2")
+end
+
+---comment
+---@param blob Blob
+---@return string
+local function decode_string(blob)
+    return blob:prefixstring(2)
+end
+
+---comment
+---@param blob Blob
+---@return string[]
+local function decode_string_array(blob)
+    return blob:array(decode_length(blob), decode_string)
+end
+
+---comment
+---@param blob Blob
+---@return TechTreeEntry
+local function decode_tech_tree_entry(blob)
+    local name = decode_string(blob)
+    local localised_name = decode_string(blob)
+    local prerequisites = decode_string_array(blob)
+    local take_effects_from = decode_string(blob) --[[@as string?]]
+    local visual_data = nil
+    if take_effects_from == "" then
+        take_effects_from = nil
+        visual_data = {
+            icon = decode_string(blob),
+            icon_size = blob:unpack("I2"),
+            localised_description = decode_string(blob),
+        }
+    end
+    local cost_reference = decode_string(blob)
+    return {
+        name = name,
+        localised_name = localised_name,
+        prerequisites = prerequisites,
+        take_effects_from = take_effects_from,
+        visual_data = visual_data,
+        cost_reference = cost_reference,
+    }
+end
+
+---comment
+---@param blob Blob
+---@return ProgressiveEntry
+local function decode_progressive_entry(blob)
+    return {
+        locations = decode_string_array(blob),
+        unlocked = decode_string_array(blob),
+    }
+end
+
+---comment
+---@param blob Blob
+---@return RecipeIngredientEntry
+local function decode_ingredient(blob)
+    local is_fluid = blob:byte() == string.char(1)
+    return {
+        is_fluid = is_fluid,
+        name = decode_string(blob),
+        amount = decode_length(blob),
+    }
+end
+
+---comment
+---@param blob Blob
+---@return RecipeTweakEntry
+local function decode_recipe_tweak_entry(blob)
+    return {
+        recipe_name = decode_string(blob),
+        category = decode_string(blob),
+        ingredients = blob:array(decode_length(blob), decode_ingredient),
+    }
+end
+
+---comment
+---@param data string
 ---@return LayoutData
+local function decode_data(data)
+    local blob = Blob.new(data)
+    local version = blob:unpack("I2")
+    assert(version == 1, "Randovania game for a different version of the mod")
+    assert(decode_string(blob) == mods["randovania-layout"], "Randovania game for a different version of the mod")
+
+    local layout_data = {
+        tech_tree = {},
+        progressive_data = {},
+        custom_recipes = {},
+        starting_tech = {},
+    } --[[@as LayoutData]]
+
+    for i = 1, decode_length(blob) do
+        table.insert(layout_data.tech_tree, decode_tech_tree_entry(blob))
+    end
+    for i = 1, decode_length(blob) do
+        table.insert(layout_data.progressive_data, decode_progressive_entry(blob))
+    end
+    for i = 1, decode_length(blob) do
+        table.insert(layout_data.custom_recipes, decode_recipe_tweak_entry(blob))
+    end
+    layout_data.starting_tech = decode_string_array(blob)
+
+    return layout_data
+end
+
+---Returns the data for configuring the randomizer.
+---@return LayoutData|false
 function layout.get_data()
-    if not layout._cache then
-        layout._cache = require("generated.json-data") --[[@as LayoutData]]
+    if layout._cache == nil then
+        local raw = base64.decode(require("generated.binary-data")) --[[@as string]]
+        layout._cache = decode_data(raw)
     end
     return layout._cache
 end
