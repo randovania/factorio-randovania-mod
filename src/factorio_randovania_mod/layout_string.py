@@ -2,23 +2,16 @@ from __future__ import annotations
 
 import base64
 import collections
-import json
-import shutil
 import typing
-from pathlib import Path
 
 from factorio_randovania_mod import schema
 from factorio_randovania_mod.layout_data import LayoutData
-from factorio_randovania_mod.lua_util import wrap
-from factorio_randovania_mod.mod_lua_api import mod_version
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
         ConfigurationTechnologiesItem,
     )
     from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
-
-_TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
 
 
 def process_technology(
@@ -57,34 +50,12 @@ def process_technology(
     return new_tech
 
 
-def generate_output(
-    output_path: Path,
-    generated_files: GeneratedFiles,
-) -> None:
+def create_string(patch_data: dict) -> str:
     """
-    Generates all files for the mod.
-    :param output_path: Where to place the output
-    :param generated_files: Data for generating all lua files
+    Creates the layout string to be used as mod setting, given the following json data.
+    :param patch_data:
     :return:
     """
-    shutil.copytree(_TEMPLATE_PATH, output_path)
-    info_json = json.loads(output_path.joinpath("info.json").read_text())
-    info_json["version"] = mod_version()
-    output_path.joinpath("info.json").write_text(json.dumps(info_json, indent=4))
-
-    output_path.joinpath("generated").mkdir()
-
-    def generate_file(name: str, content: str) -> None:
-        output_path.joinpath("generated", name).write_text("return " + content)
-
-    binary_data = base64.b64encode(LayoutData.build(generated_files)).decode("ascii")
-    generate_file("binary-data.lua", wrap(binary_data))
-
-
-def create(patch_data: dict, output_folder: Path) -> None:
-    output_path = output_folder.joinpath("randovania-layout")
-    shutil.rmtree(output_path, ignore_errors=True)
-
     configuration = schema.validate(patch_data)
 
     progressive_sources: dict[tuple[str, ...], list[str]] = collections.defaultdict(list)
@@ -113,4 +84,4 @@ def create(patch_data: dict, output_folder: Path) -> None:
             }
         )
 
-    generate_output(output_path, generated_files)
+    return base64.b64encode(LayoutData.build(generated_files)).decode("ascii")
