@@ -86,6 +86,7 @@ select = [
 ]
 extend-ignore = [
     "ISC001",  # may cause conflicts with formatter
+    "E712",  # construct uses `== False`
 ]
 
 [tool.ruff.lint.isort]

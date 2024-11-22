@@ -5,19 +5,18 @@ import collections
 import typing
 
 from factorio_randovania_mod import schema
-from factorio_randovania_mod.layout_data import LayoutData
+from factorio_randovania_mod.layout_data import LayoutData, LayoutDataConstruct, TechTreeEntry
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import (
         ConfigurationTechnologiesItem,
     )
-    from factorio_randovania_mod.mod_lua_api import CustomTechTreeItem, GeneratedFiles
 
 
 def process_technology(
     progressive_sources: dict[tuple[str, ...], list[str]],
     tech: ConfigurationTechnologiesItem,
-) -> CustomTechTreeItem:
+) -> TechTreeEntry:
     """
     Process an entry of patch_data["technologies"]
     :param progressive_sources:
@@ -26,7 +25,7 @@ def process_technology(
     """
     tech_name = tech["tech_name"]
 
-    new_tech: CustomTechTreeItem = {
+    new_tech: TechTreeEntry = {
         "name": tech_name,
         "localised_name": tech["locale_name"],
         "prerequisites": tech["prerequisites"],
@@ -59,7 +58,7 @@ def create_string(patch_data: dict) -> str:
     configuration = schema.validate(patch_data)
 
     progressive_sources: dict[tuple[str, ...], list[str]] = collections.defaultdict(list)
-    generated_files: GeneratedFiles = {
+    generated_files: LayoutData = {
         "tech_tree": [],
         "progressive_data": [],
         "starting_tech": configuration["starting_tech"],
@@ -84,4 +83,4 @@ def create_string(patch_data: dict) -> str:
             }
         )
 
-    return base64.b64encode(LayoutData.build(generated_files)).decode("ascii")
+    return base64.b64encode(LayoutDataConstruct.build(generated_files)).decode("ascii")

@@ -4,7 +4,7 @@ import logging
 import logging.config
 from pathlib import Path
 
-from factorio_randovania_mod import layout_string, mod_zip
+from factorio_randovania_mod import layout_string, mod_lua_api, mod_zip
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -73,6 +73,11 @@ def generate_layout(args: argparse.Namespace) -> None:
 
     s = layout_string.create_string(configuration)
     print(s)
+
+    if args.apply_to_mod_settings:
+        mod_folder: Path = args.apply_to_mod_settings
+        mod_lua_api.add_layout_string_to_mod_settings(s, mod_folder)
+        mod_lua_api.enable_mods_in_list(mod_folder, {"randovania-layout", "randovania-assets"})
 
 
 def main() -> None:
