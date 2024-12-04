@@ -9,17 +9,6 @@ import typing_extensions as typ
 
 
 # Schema entries
-class ConfigurationTechnologiesItemResearchTrigger(typ.TypedDict, total=False):
-    entity: str
-    item: str
-    count: int
-
-@typ.final
-class ConfigurationTechnologiesItemCost(typ.TypedDict):
-    count: int
-    time: int
-    ingredients: list[str]
-
 @typ.final
 class ConfigurationTechnologiesItem(typ.TypedDict):
     tech_name: typ.NotRequired[str]
@@ -27,8 +16,7 @@ class ConfigurationTechnologiesItem(typ.TypedDict):
     description: str
     icon: str
     icon_size: typ.NotRequired[int]
-    research_trigger: typ.NotRequired[ConfigurationTechnologiesItemResearchTrigger]
-    cost: typ.NotRequired[ConfigurationTechnologiesItemCost]
+    cost_reference: typ.NotRequired[str]
     prerequisites: list[str]
     unlocks: list[str]
 
