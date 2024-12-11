@@ -1,3 +1,4 @@
+import enum
 import typing
 
 import construct
@@ -38,37 +39,38 @@ class ErrorWithMessage(construct.Construct):
         raise construct.SizeofError("Error does not have size, because it interrupts parsing and building", path=path)
 
 
-PropertyTreeType = construct.Enum(
-    construct.Int8ul,
-    none=0,
-    bool=1,
-    number=2,
-    string=3,
-    list=4,
-    dictionary=5,
-    signedinteger=6,
-    unsignedinteger=7,
-)
+class PropertyTreeTypeEnum(enum.IntEnum):
+    NONE = 0
+    BOOL = 1
+    NUMBER = 2
+    STRING = 3
+    LIST = 4
+    DICTIONARY = 5
+    SIGNED_INTEGER = 6
+    UNSIGNED_INTEGER = 7
+
+
+PropertyTreeType = construct.Enum(construct.Int8ul, PropertyTreeTypeEnum)
 
 
 def _python_value_to_tree_type(value: typing.Any) -> str:
     if value is None:
-        return "none"
+        return PropertyTreeTypeEnum.NONE.name
     if isinstance(value, bool):
-        return "bool"
+        return PropertyTreeTypeEnum.BOOL.name
     if isinstance(value, str):
-        return "string"
+        return PropertyTreeTypeEnum.STRING.name
     if isinstance(value, float):
-        return "number"
+        return PropertyTreeTypeEnum.NUMBER.name
     if isinstance(value, list):
-        return "list"
+        return PropertyTreeTypeEnum.LIST.name
     if isinstance(value, dict):
-        return "dictionary"
+        return PropertyTreeTypeEnum.DICTIONARY.name
     if isinstance(value, int):
         if value > 2**63:
-            return "unsignedinteger"
+            return PropertyTreeTypeEnum.UNSIGNED_INTEGER.name
         else:
-            return "signedinteger"
+            return PropertyTreeTypeEnum.SIGNED_INTEGER.name
     raise construct.ConstructError(f"Unsupported type: {value}")
 
 
@@ -92,12 +94,12 @@ PropertyString = construct.FocusedSeq(
 )
 
 _property_type_value = {
-    "none": construct.Pass,
-    "bool": construct.Flag,
-    "number": construct.Double,
-    "string": PropertyString,
-    "signedinteger": construct.Int64sl,
-    "unsignedinteger": construct.Int64ul,
+    PropertyTreeTypeEnum.NONE.name: construct.Pass,
+    PropertyTreeTypeEnum.BOOL.name: construct.Flag,
+    PropertyTreeTypeEnum.NUMBER.name: construct.Double,
+    PropertyTreeTypeEnum.STRING.name: PropertyString,
+    PropertyTreeTypeEnum.SIGNED_INTEGER.name: construct.Int64sl,
+    PropertyTreeTypeEnum.UNSIGNED_INTEGER.name: construct.Int64ul,
 }
 
 PropertyTree = construct.FocusedSeq(
@@ -116,7 +118,7 @@ PropertyTree = construct.FocusedSeq(
     ),
 )
 
-_property_type_value["list"] = construct.PrefixedArray(
+_property_type_value[PropertyTreeTypeEnum.LIST.name] = construct.PrefixedArray(
     construct.Int32ul,
     construct.FocusedSeq(
         "value",
@@ -124,7 +126,7 @@ _property_type_value["list"] = construct.PrefixedArray(
         "value" / PropertyTree,
     ),
 )
-_property_type_value["dictionary"] = DictAdapter(
+_property_type_value[PropertyTreeTypeEnum.DICTIONARY.name] = DictAdapter(
     construct.PrefixedArray(
         construct.Int32ul,
         construct.Struct(
