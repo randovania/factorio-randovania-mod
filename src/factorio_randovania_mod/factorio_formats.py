@@ -50,6 +50,28 @@ PropertyTreeType = construct.Enum(
     unsignedinteger=7,
 )
 
+
+def _python_value_to_tree_type(value: typing.Any) -> str:
+    if value is None:
+        return "none"
+    if isinstance(value, bool):
+        return "bool"
+    if isinstance(value, str):
+        return "string"
+    if isinstance(value, float):
+        return "number"
+    if isinstance(value, list):
+        return "list"
+    if isinstance(value, dict):
+        return "dictionary"
+    if isinstance(value, int):
+        if value > 2**63:
+            return "unsignedinteger"
+        else:
+            return "signedinteger"
+    raise construct.ConstructError(f"Unsupported type: {value}")
+
+
 SpaceOptimizedUInt = construct.Select(
     construct.FocusedSeq(
         "val",
@@ -77,28 +99,6 @@ _property_type_value = {
     "signedinteger": construct.Int64sl,
     "unsignedinteger": construct.Int64ul,
 }
-
-
-def _python_value_to_tree_type(value: typing.Any) -> str:
-    if value is None:
-        return "none"
-    if isinstance(value, bool):
-        return "bool"
-    if isinstance(value, str):
-        return "string"
-    if isinstance(value, float):
-        return "number"
-    if isinstance(value, list):
-        return "list"
-    if isinstance(value, dict):
-        return "dictionary"
-    if isinstance(value, int):
-        if value > 2**63:
-            return "unsignedinteger"
-        else:
-            return "signedinteger"
-    raise construct.ConstructError(f"Unsupported type: {value}")
-
 
 PropertyTree = construct.FocusedSeq(
     "value",
