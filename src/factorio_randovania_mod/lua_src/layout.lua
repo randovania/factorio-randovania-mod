@@ -72,9 +72,9 @@ do
     }
 end
 
-local base64 = require("base64")
-local Blob = require("Blob")
-local LibDeflate = require("LibDeflate")
+local base64 = require("external_libs.base64")
+local Blob = require("external_libs.Blob")
+local LibDeflate = require("external_libs.LibDeflate")
 
 local layout = {}
 
