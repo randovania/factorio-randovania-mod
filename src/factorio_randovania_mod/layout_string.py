@@ -43,7 +43,6 @@ def process_technology(
             "localised_description": tech["description"],
         }
         if tech["unlocks"]:
-            # local_unlocks[tech_name] = tech["unlocks"]
             progressive_sources[tuple(tech["unlocks"])].append(tech_name)
 
     return new_tech
