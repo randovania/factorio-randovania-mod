@@ -25,6 +25,8 @@ dynamic = ["version"]
 dependencies = [
     # For validating the schema
     "jsonschema",
+    # For encoding data to be sent to Lua
+    "construct",
 ]
 
 # Entry Points for PyInstaller
@@ -84,6 +86,7 @@ select = [
 ]
 extend-ignore = [
     "ISC001",  # may cause conflicts with formatter
+    "E712",  # construct uses `== False`
 ]
 
 [tool.ruff.lint.isort]

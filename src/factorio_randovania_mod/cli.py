@@ -2,22 +2,32 @@ import argparse
 import json
 import logging
 import logging.config
-import time
 from pathlib import Path
 
-from factorio_randovania_mod import creator
+from factorio_randovania_mod import layout_string, mod_lua_api, mod_zip
 
 
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
+    parser.add_argument("-q", "--quiet", action="store_true", help="Disables all info and debug logs.")
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    zip_parser = subparsers.add_parser("generate-zip", help="Generates a zip file with the mod's lua code.")
+    zip_parser.add_argument(
         "--output-path",
         required=True,
         type=Path,
-        help="Path to where the mod files will be written to.",
+        help="Path to directory where the zip file is added.",
     )
-    parser.add_argument("--input-json", required=True, type=Path, help="Path to the configuration json.")
-    parser.add_argument("-q", "--quiet", action="store_true", help="Disables all info and debug logs.")
+
+    layout_parser = subparsers.add_parser("generate-layout", help="Generates the string to be used in the mod settings")
+    layout_parser.add_argument("--input-json", required=True, type=Path, help="Path to the configuration json.")
+    layout_parser.add_argument(
+        "--apply-to-mod-settings",
+        required=False,
+        type=Path,
+        help="If provided, the mod-settings.dat in the given folder is modified.",
+    )
     return parser
 
 
@@ -53,6 +63,23 @@ def setup_logging() -> None:
     )
 
 
+def generate_zip(args: argparse.Namespace) -> None:
+    mod_zip.create_zip_package(args.output_path)
+
+
+def generate_layout(args: argparse.Namespace) -> None:
+    with args.input_json.open() as f:
+        configuration = json.load(f)
+
+    s = layout_string.create_string(configuration)
+    print(s)
+
+    if args.apply_to_mod_settings:
+        mod_folder: Path = args.apply_to_mod_settings
+        mod_lua_api.add_layout_string_to_mod_settings(s, mod_folder)
+        mod_lua_api.enable_mods_in_list(mod_folder, {"randovania-layout", "randovania-assets"})
+
+
 def main() -> None:
     setup_logging()
     parser = create_parser()
@@ -60,13 +87,7 @@ def main() -> None:
     if args.quiet:
         logging.getLogger().setLevel(logging.WARNING)
 
-    with args.input_json.open() as f:
-        configuration = json.load(f)
-
-    start = time.time()
-    creator.create(
-        configuration,
-        args.output_path,
-    )
-    end = time.time()
-    print(f"Patcher took {end - start:.03f} seconds")
+    if args.command == "generate-zip":
+        generate_zip(args)
+    elif args.command == "generate-layout":
+        generate_layout(args)
