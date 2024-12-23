@@ -6,8 +6,6 @@ from __future__ import annotations
 import typing_extensions as typ
 
 
-
-
 # Schema entries
 @typ.final
 class ConfigurationTechnologiesItem(typ.TypedDict):
@@ -20,11 +18,16 @@ class ConfigurationTechnologiesItem(typ.TypedDict):
     prerequisites: list[str]
     unlocks: list[str]
 
+ConfigurationRecipesItemIngredientsItemType = typ.Literal[
+    'item',
+    'fluid'
+]
+
 @typ.final
 class ConfigurationRecipesItemIngredientsItem(typ.TypedDict):
     name: str
     amount: int
-    type: typ.NotRequired[str]
+    type: typ.NotRequired[ConfigurationRecipesItemIngredientsItemType]
 
 @typ.final
 class ConfigurationRecipesItem(typ.TypedDict):
