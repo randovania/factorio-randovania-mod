@@ -15,10 +15,10 @@ class ConfigurationTechnologiesItem(typ.TypedDict):
     """Internal name of the technology"""
 
     locale_name: str
-    """Name of the technology, added to the locale file."""
+    """Name of the technology"""
 
     description: str
-    """Description of the technology, added to the locale file."""
+    """Description of the technology"""
 
     icon: str
     """Factorio filepath for the icon to use"""
