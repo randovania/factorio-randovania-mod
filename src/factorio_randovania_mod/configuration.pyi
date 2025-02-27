@@ -8,6 +8,7 @@ import typing_extensions as typ
 
 
 # Schema entries
+
 @typ.final
 class ConfigurationTechnologiesItem(typ.TypedDict):
     tech_name: typ.NotRequired[str]
@@ -33,7 +34,6 @@ class ConfigurationTechnologiesItem(typ.TypedDict):
 
     unlocks: list[str]
     """List of which technologies are granted when this is researched."""
-
 
 ConfigurationRecipesItemIngredientsItemType = typ.Literal[
     'item',
@@ -80,4 +80,3 @@ class Configuration(typ.TypedDict):
 
     starting_tech: list[str]
     """List of technologies that you start the game with"""
-

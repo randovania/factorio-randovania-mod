@@ -11,7 +11,7 @@ repos:
       - id: ruff-format
 
 -   repo: https://github.com/henriquegemignani/jsonschema-to-typeddict
-    rev: v1.3
+    rev: v1.3.1
     hooks:
     -   id: jsonschema-to-typeddict
         files: src/factorio_randovania_mod/files/schema.json
