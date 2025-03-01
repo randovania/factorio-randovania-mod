@@ -9,6 +9,8 @@ _TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
 _ASSETS_MOD_URL = (
     "https://github.com/randovania/factorio-assets-mod/releases/download/{version}/randovania-assets-{version}.zip"
 )
+MAIN_MOD_NAME = "randovania-layout"
+ASSETS_MOD_NAME = "randovania-assets"
 
 
 def create_zip_package(output_path: Path) -> None:
@@ -40,7 +42,7 @@ def create_zip_package(output_path: Path) -> None:
                 )
 
 
-def get_assets_mod_version() -> str:
+def get_minimum_assets_mod_version() -> str:
     """
     Gets the minimum version of the assets mod required to run this version of the randomizer.
     :return:
@@ -55,9 +57,23 @@ def get_assets_mod_version() -> str:
     raise RuntimeError("Could not find the randovania-assets dependency")
 
 
-def get_assets_mod_url(version: str) -> str:
+def get_assets_mod_url(version: str | None) -> str:
     """
     Gets a URL for downloading the provided version of the assets mod.
+    :param version: The version to download for. Defaults to `get_assets_mod_version`
     :return:
     """
+    if version is None:
+        version = get_minimum_assets_mod_version()
     return _ASSETS_MOD_URL.format(version=version)
+
+
+def get_assets_mod_file_name(version: str | None) -> str:
+    """
+    Gets the name of the zip file of the assets mod for the provided version.
+    :param version: The version to download for. Defaults to `get_assets_mod_version`
+    :return:
+    """
+    if version is None:
+        version = get_minimum_assets_mod_version()
+    return f"randovania-assets_{version}.zip"
