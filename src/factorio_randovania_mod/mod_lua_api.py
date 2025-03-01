@@ -53,12 +53,12 @@ def add_layout_string_to_mod_settings(layout_string: str, mods_folder: Path) -> 
     path.write_bytes(ModSettings.build(settings))
 
 
-def enable_mods_in_list(mods_folder: Path, to_enable: set[str]) -> None:
+def enable_mods_in_list(mods_folder: Path, to_enable: dict[str, str | None]) -> bool:
     """
     If any of the given mods are disabled in the given mods folder, enable them.
     :param mods_folder:
-    :param to_enable:
-    :return:
+    :param to_enable: The mods to enable and with what version. If version is not set, let any version work
+    :return: True if the file was modified, False otherwise.
     """
     path = mods_folder.joinpath("mod-list.json")
 
@@ -69,14 +69,34 @@ def enable_mods_in_list(mods_folder: Path, to_enable: set[str]) -> None:
     except (FileNotFoundError, json.JSONDecodeError):
         # If the file doesn't exist, leave it alone. The game defaults all mods as enabled.
         # If the file is not valid, we'll let the game worry about that.
-        return
+        return False
 
     update_file = False
+    mods_to_add = set(to_enable)
 
     for mod in mod_list["mods"]:
-        if not mod["enabled"] and mod["name"] in to_enable:
-            mod["enabled"] = True
-            update_file = True
+        if mod["name"] in to_enable:
+            mods_to_add.remove(mod["name"])
+
+            if not mod["enabled"]:
+                mod["enabled"] = True
+                update_file = True
+
+            expected_version = to_enable[mod["name"]]
+            if expected_version is not None and expected_version != mod.get("version"):
+                mod["version"] = expected_version
+                update_file = True
+
+    for new_mod in sorted(mods_to_add):
+        new_entry = {
+            "name": new_mod,
+            "enabled": True,
+        }
+        if to_enable[new_mod] is not None:
+            new_entry["version"] = to_enable[new_mod]
+
+        mod_list["mods"].append(new_entry)
+        update_file = True
 
     if update_file:
         path.write_text(
@@ -85,3 +105,5 @@ def enable_mods_in_list(mods_folder: Path, to_enable: set[str]) -> None:
                 indent=4,
             )
         )
+
+    return True

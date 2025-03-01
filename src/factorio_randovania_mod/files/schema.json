@@ -26,11 +26,11 @@
                         "type": "string"
                     },
                     "locale_name": {
-                        "description": "Name of the technology, added to the locale file.",
+                        "description": "Name of the technology",
                         "type": "string"
                     },
                     "description": {
-                        "description": "Description of the technology, added to the locale file.",
+                        "description": "Description of the technology",
                         "type": "string"
                     },
                     "icon": {
