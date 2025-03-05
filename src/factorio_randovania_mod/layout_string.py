@@ -82,4 +82,4 @@ def create_string(patch_data: dict) -> str:
             }
         )
 
-    return base64.b64encode(LayoutDataConstruct.build(generated_files)).decode("ascii")
+    return base64.b64encode(LayoutDataConstruct().build(generated_files)).decode("ascii")
