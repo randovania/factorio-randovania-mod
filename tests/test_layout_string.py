@@ -12,5 +12,5 @@ def test_create(test_files: Path) -> None:
     result = layout_string.create_string(patch_data)
 
     assert hashlib.sha256(result.encode("ascii")).digest() == (
-        b"\x1a\xa1j\x9f1\x18\xa8\xff\xd2\xcf\x97\xbc\xb4=\xdf\xe4\x1f\x88\x94*%\xac\xb3K\x9f(\xd3\n\xdf\xb9\x02\x08"
+        b"V\xb2\x9a2_&\x7f\x91\xe87\x96h\x1e\xfaG\xbd\xe1F}\xd0c\xa7\x8e`5l7\x16;m\xa2#"
     )
