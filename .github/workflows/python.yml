@@ -42,11 +42,14 @@ jobs:
     needs:
       - build
 
-    runs-on: ubuntu-latest
-    name: Test Python ${{ matrix.python.version }}
+    runs-on: ${{ matrix.os }}
+    name: Test Python ${{ matrix.python.version }} (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
         python:
           - {version: '3.11', wheel: 'cp311-cp311'}
           - {version: '3.12', wheel: 'cp312-cp312'}
