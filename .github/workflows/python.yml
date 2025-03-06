@@ -168,7 +168,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPDATE_EXISTING: "true"
-          VERSION_REGEX: ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+          VERSION_REGEX: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
 
       - name: Upload GitHub artifacts
         uses: Roang-zero1/github-upload-release-artifacts-action@master
@@ -192,5 +192,5 @@ jobs:
       - name: Factorio release
         uses: henriquegemignani/factorio-mod-uploader@v1
         with:
-          zip_file: "mod-dist/randovania-${{ needs.package.outputs.version }}.zip"
+          zip_file: "mod-dist/randovania_${{ needs.package.outputs.version }}.zip"
           api_key: "${{ secrets.FACTORIO_API_KEY }}"
