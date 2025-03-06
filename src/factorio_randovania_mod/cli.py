@@ -75,9 +75,15 @@ def generate_layout(args: argparse.Namespace) -> None:
     print(s)
 
     if args.apply_to_mod_settings:
-        mod_folder: Path = args.apply_to_mod_settings
-        mod_lua_api.add_layout_string_to_mod_settings(s, mod_folder)
-        mod_lua_api.enable_mods_in_list(mod_folder, {"randovania-layout", "randovania-assets"})
+        mods_folder: Path = args.apply_to_mod_settings
+        mod_lua_api.add_layout_string_to_mod_settings(s, mods_folder)
+        mod_lua_api.enable_mods_in_list(
+            mods_folder,
+            {
+                mod_zip.MAIN_MOD_NAME: mod_lua_api.mod_version(),
+                mod_zip.ASSETS_MOD_NAME: None,
+            },
+        )
 
 
 def main() -> None:
