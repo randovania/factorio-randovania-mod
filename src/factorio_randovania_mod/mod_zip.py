@@ -9,7 +9,7 @@ _TEMPLATE_PATH = Path(__file__).parent.joinpath("lua_src")
 _ASSETS_MOD_URL = (
     "https://github.com/randovania/factorio-assets-mod/releases/download/{version}/randovania-assets-{version}.zip"
 )
-MAIN_MOD_NAME = "randovania-layout"
+MAIN_MOD_NAME = "randovania"
 ASSETS_MOD_NAME = "randovania-assets"
 
 
