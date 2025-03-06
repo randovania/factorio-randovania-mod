@@ -108,3 +108,89 @@ jobs:
       - name: Publish 📦 to PyPI
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         uses: pypa/gh-action-pypi-publish@release/v1
+
+  package:
+    runs-on: 'ubuntu-latest'
+    needs:
+      - build
+
+    outputs:
+      version: ${{ steps.package_details.outputs.version }}
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Install Python packages
+        run: python -m pip install --upgrade pip
+
+      - name: install built wheel
+        run: python -m pip install "$(ls dist/*.whl)[test]"
+        shell: bash
+
+      - name: Create Zip
+        run: python -m factorio_randovania_mod generate-zip --output-path mod-dist
+
+      - name: Get Package details
+        id: package_details
+        shell: bash
+        run: |
+          echo "version=$(python -c "import factorio_randovania_mod.mod_lua_api; print(factorio_randovania_mod.mod_lua_api.mod_version())")" >> $GITHUB_OUTPUT
+
+      - name: Store the Mod Package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mod Package
+          path: mod-dist
+
+  release-github:
+    runs-on: ubuntu-latest
+    needs:
+      - package
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download the mod package
+        uses: actions/download-artifact@v4
+        with:
+          name: Mod Package
+          path: mod-dist/
+
+      - name: Create GitHub release
+        uses: Roang-zero1/github-create-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPDATE_EXISTING: "true"
+          VERSION_REGEX: ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+
+      - name: Upload GitHub artifacts
+        uses: Roang-zero1/github-upload-release-artifacts-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: mod-dist/
+
+  release-modportal:
+    runs-on: ubuntu-latest
+    needs:
+      - package
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download the mod package
+        uses: actions/download-artifact@v4
+        with:
+          name: Mod Package
+          path: mod-dist/
+
+      - name: Factorio release
+        uses: henriquegemignani/factorio-mod-uploader@v1
+        with:
+          zip_file: "mod-dist/randovania-${{ needs.package.outputs.version }}.zip"
+          api_key: "${{ secrets.FACTORIO_API_KEY }}"
