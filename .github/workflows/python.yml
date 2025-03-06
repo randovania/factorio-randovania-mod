@@ -168,7 +168,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           UPDATE_EXISTING: "true"
-          VERSION_REGEX: ^[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+          VERSION_REGEX: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
 
       - name: Upload GitHub artifacts
         uses: Roang-zero1/github-upload-release-artifacts-action@master
