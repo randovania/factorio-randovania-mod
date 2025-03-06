@@ -192,5 +192,5 @@ jobs:
       - name: Factorio release
         uses: henriquegemignani/factorio-mod-uploader@v1
         with:
-          zip_file: "mod-dist/randovania-${{ needs.package.outputs.version }}.zip"
+          zip_file: "mod-dist/randovania_${{ needs.package.outputs.version }}.zip"
           api_key: "${{ secrets.FACTORIO_API_KEY }}"
