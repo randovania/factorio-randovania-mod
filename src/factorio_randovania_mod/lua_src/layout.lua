@@ -171,7 +171,7 @@ local function decode_data(data)
     local expected_version = decode_string(blob_header)
     if settings.startup["randovania-enforce-version"].value then
         local active_mods = mods or script.active_mods
-        assert(expected_version == active_mods["randovania-layout"], "Randovania game for a different version of the mod")
+        assert(expected_version == active_mods["randovania"], "Randovania game for a different version of the mod")
     end
     local compressed_size = blob_header:unpack("I4")
     
