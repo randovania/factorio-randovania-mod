@@ -125,7 +125,7 @@ data:extend {
                 type = "unlock-recipe"
             }
         },
-        icon = "__base__/graphics/technology/electric-energy-distribution-1.png",
+        icon = "__randovania-assets__/graphics/technology/big-electric-pole.png",
         icon_size = 256
     },
     make_tech {

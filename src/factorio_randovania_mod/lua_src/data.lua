@@ -163,6 +163,7 @@ remove_if(
         return it.recipe == "big-electric-pole"
     end
 )
+data.raw["technology"]["electric-energy-distribution-1"].icon = "__randovania-assets__/graphics/technology/medium-electric-pole.png"
 
 ---- Remove regular inserter capacity bonus from inserter-capacity-bonus-7
 remove_if(
