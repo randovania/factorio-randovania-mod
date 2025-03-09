@@ -1,5 +1,12 @@
 data.raw.lab.lab.fast_replaceable_group = "lab"
 
+data:extend {{
+    type = "item-subgroup",
+    name = "burner-machine",
+    group = "production",
+    order = "e-burner"
+}}
+
 local burner_lab = table.deepcopy(data.raw.lab.lab)
 burner_lab.name = "burner-lab"
 burner_lab.minable.result = "burner-lab"
@@ -44,6 +51,7 @@ local lab_item = table.deepcopy(data.raw.item.lab)
 lab_item.name = "burner-lab"
 lab_item.icon = "__randovania-assets__/graphics/icons/burner-lab.png"
 lab_item.place_result = "burner-lab"
+lab_item.subgroup = "burner-machine"
 
 local lab_recipe = {
     type = "recipe",
@@ -93,6 +101,7 @@ local machine_item = table.deepcopy(data.raw.item["assembling-machine-1"])
 machine_item.name = "burner-assembling-machine"
 machine_item.icon = "__randovania-assets__/graphics/icons/burner-assembling-machine.png"
 machine_item.place_result = "burner-assembling-machine"
+machine_item.subgroup = "burner-machine"
 
 local machine_recipe = {
     type = "recipe",
