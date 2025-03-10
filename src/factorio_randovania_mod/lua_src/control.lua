@@ -27,7 +27,7 @@ local _itemTypesWithFreebies = {
 ---@param item_prototype LuaItemPrototype
 ---@return boolean
 local function should_give_freebie_for(item_prototype)
-    if item_prototype.place_result or item_prototype.module_effects or _itemTypesWithFreebies[item_prototype.type] then
+    if item_prototype.place_result or item_prototype.place_as_equipment_result or item_prototype.module_effects or _itemTypesWithFreebies[item_prototype.type] then
         return true
     end
     return false
