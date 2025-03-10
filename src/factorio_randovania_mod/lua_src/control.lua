@@ -19,6 +19,19 @@ local _bannedCategoriesForFreebies = {
     ["rocket-building"] = true,
     ["hand-crafting"] = true,
 }
+local _itemTypesWithFreebies = {
+    ["armor"] = true,
+    ["gun"] = true,
+}
+
+---@param item_prototype LuaItemPrototype
+---@return boolean
+local function should_give_freebie_for(item_prototype)
+    if item_prototype.place_result or item_prototype.module_effects or _itemTypesWithFreebies[item_prototype.type] then
+        return true
+    end
+    return false
+end
 
 ---@param player_index int
 local function give_pending_freebies(player_index)
@@ -83,10 +96,13 @@ local function freebies_for_tech(research)
 
                 for _, product in ipairs(recipe_proto.products) do
                     if product.type == "item" and (product.amount or product.amount_max) - (ingredient_count[product.name] or 0) > 0 then
-                        table.insert(result, {
-                            name = product.name,
-                            count = prototypes.item[product.name].stack_size,
-                        })
+                        local target_prototype = prototypes.item[product.name]
+                        if should_give_freebie_for(target_prototype) then
+                            table.insert(result, {
+                                name = product.name,
+                                count = target_prototype.stack_size,
+                            })
+                        end
                     end
                 end
             end
