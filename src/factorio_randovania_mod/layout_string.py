@@ -58,6 +58,7 @@ def create_string(patch_data: dict) -> str:
 
     progressive_sources: dict[tuple[str, ...], list[str]] = collections.defaultdict(list)
     generated_files: LayoutData = {
+        "optional_modifications": configuration["optional_modifications"],
         "tech_tree": [],
         "progressive_data": [],
         "starting_tech": configuration["starting_tech"],

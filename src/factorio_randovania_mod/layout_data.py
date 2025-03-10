@@ -7,7 +7,7 @@ import construct
 from factorio_randovania_mod import mod_lua_api
 
 if typing.TYPE_CHECKING:
-    from factorio_randovania_mod.configuration import ConfigurationRecipesItem
+    from factorio_randovania_mod.configuration import ConfigurationOptionalModifications, ConfigurationRecipesItem
 
 Short = construct.Int16ul
 PrefixString = construct.PascalString(Short, "utf-8")
@@ -36,6 +36,7 @@ class ProgressiveEntry(typing.TypedDict):
 
 
 class LayoutData(typing.TypedDict):
+    optional_modifications: ConfigurationOptionalModifications
     tech_tree: list[TechTreeEntry]
     progressive_data: list[ProgressiveEntry]
     custom_recipes: list[ConfigurationRecipesItem]
@@ -68,6 +69,11 @@ def LayoutDataConstruct():
             construct.Int32ul,
             construct.Compressed(
                 construct.Struct(
+                    optional_modifications=construct.Struct(
+                        can_send_fish_to_space=construct.Flag,
+                        stronger_solar=construct.Flag,
+                        productivity_everywhere=construct.Flag,
+                    ),
                     tech_tree=construct.PrefixedArray(Short, TechTreeEntryConstruct),
                     progressive_data=construct.PrefixedArray(
                         Short,

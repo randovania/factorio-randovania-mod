@@ -10,6 +10,20 @@ import typing_extensions as typ
 # Schema entries
 
 @typ.final
+class ConfigurationOptionalModifications(typ.TypedDict, total=False):
+    """Optionally change certain parts of the game"""
+
+    can_send_fish_to_space: bool = False
+    """Allow sending a fish to space in a Rocket"""
+
+    stronger_solar: bool = True
+    """Makes Solar Panels and Accumulators 4 times better"""
+
+    productivity_everywhere: bool = True
+    """Allow usage of Productivity Modules in all recipes"""
+
+
+@typ.final
 class ConfigurationTechnologiesItem(typ.TypedDict):
     tech_name: typ.NotRequired[str]
     """Internal name of the technology"""
@@ -71,6 +85,9 @@ class Configuration(typ.TypedDict):
 
     layout_uuid: typ.Annotated[str, '/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/']
     """An UUID exposed via a global lua variable"""
+
+    optional_modifications: typ.NotRequired[ConfigurationOptionalModifications] = {}
+    """Optionally change certain parts of the game"""
 
     technologies: list[ConfigurationTechnologiesItem]
     """List of custom technologies to create."""

@@ -173,17 +173,6 @@ remove_if(
     end
 )
 
----- Make Solar and Accumulators better
-
-data.raw["solar-panel"]["solar-panel"].production = "240kW"
-data.raw["accumulator"]["accumulator"].energy_source = {
-    type = "electric",
-    buffer_capacity = "20MJ",
-    usage_priority = "tertiary",
-    input_flow_limit = "1200kW",
-    output_flow_limit = "1200kW"
-}
-
 ---- Tweak Nuclear Reactor freebies
 
 data.raw["item"]["steam-turbine"].stack_size = 50

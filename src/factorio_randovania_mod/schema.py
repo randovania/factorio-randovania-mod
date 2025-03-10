@@ -4,7 +4,7 @@ import json
 import typing
 from pathlib import Path
 
-from jsonschema import Draft7Validator
+from factorio_randovania_mod.validator_with_default import DefaultValidatingDraft7Validator
 
 if typing.TYPE_CHECKING:
     from factorio_randovania_mod.configuration import Configuration
@@ -18,6 +18,6 @@ def _read_schema() -> dict:
 
 
 def validate(data: dict) -> Configuration:
-    Draft7Validator(_read_schema()).validate(data)
+    DefaultValidatingDraft7Validator(_read_schema()).validate(data)
 
     return typing.cast("Configuration", data)
