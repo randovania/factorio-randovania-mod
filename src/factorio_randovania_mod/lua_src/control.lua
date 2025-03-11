@@ -64,17 +64,20 @@ local function give_pending_freebies(player_index)
             assert(item_name)
 
             local stack = {name = item_name, count = pending_freebies[item_name]} --[[@as ItemStackDefinition]]
-            if character.can_insert(stack) then
+            if stack.count > 0 and character.can_insert(stack) then
                 local sent = character.insert(stack)
                 player.print(string.format("Received %dx [item=%s]", sent, stack.name))
                 players_already_warned[player_index] = nil
-                pending_freebies[item_name] = nil
+                pending_freebies[item_name] = pending_freebies[item_name] - sent
             else
                 if not players_already_warned[player_index] then
                     player.print("Unable to provide freebies, inventory is full.")
                     players_already_warned[player_index] = true
                 end
                 return
+            end
+            if pending_freebies[item_name] <= 0 then
+                pending_freebies[item_name] = nil
             end
         end
     else
@@ -237,7 +240,7 @@ script.on_event(defines.events.on_player_toggled_map_editor, on_player_toggled_m
 local function starting_item_freebies(items)
     local result = {}
     for _, name in pairs(items) do
-        result[name] = prototypes.item[name].stack_size
+        result[name] = should_give_freebie_for(prototypes.item[name])
     end
     return result
 end
