@@ -15,6 +15,29 @@
             "type": "string",
             "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
         },
+        "optional_modifications": {
+            "description": "Optionally change certain parts of the game",
+            "type": "object",
+            "properties": {
+                "can_send_fish_to_space": {
+                    "description": "Allow sending a fish to space in a Rocket",
+                    "type": "boolean",
+                    "default": false
+                },
+                "stronger_solar": {
+                    "description": "Makes Solar Panels and Accumulators 4 times better",
+                    "type": "boolean",
+                    "default": true
+                },
+                "productivity_everywhere": {
+                    "description": "Allow usage of Productivity Modules in all recipes",
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "default": {},
+            "additionalProperties": false
+        },
         "technologies": {
             "description": "List of custom technologies to create.",
             "type": "array",

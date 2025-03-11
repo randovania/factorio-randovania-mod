@@ -6,6 +6,26 @@ if not has_layout or not layout_data then
     return
 end
 
+
+if not layout_data.optional_modifications.can_send_fish_to_space then
+    -- Deny launching fish to space
+    data.raw.capsule["raw-fish"].send_to_orbit_mode = nil
+end
+
+
+if layout_data.optional_modifications.stronger_solar then
+    ---- Make Solar and Accumulators 4 times better
+    data.raw["solar-panel"]["solar-panel"].production = "240kW"
+    data.raw["accumulator"]["accumulator"].energy_source = {
+        type = "electric",
+        buffer_capacity = "20MJ",
+        usage_priority = "tertiary",
+        input_flow_limit = "1200kW",
+        output_flow_limit = "1200kW"
+    }
+end
+
+
 local existing_tree = {}
 
 for _, progressive in pairs(layout_data.progressive_data) do
@@ -101,7 +121,9 @@ for _, custom_recipe in pairs(layout_data.custom_recipes) do
     end
 end
 
--- Make productivity modules work everywhere
-for _, recipe in pairs(data.raw["recipe"]) do
-    recipe.allow_productivity = true
+if layout_data.optional_modifications.productivity_everywhere then
+    -- Make productivity modules work everywhere
+    for _, recipe in pairs(data.raw["recipe"]) do
+        recipe.allow_productivity = true
+    end
 end

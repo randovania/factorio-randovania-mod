@@ -58,6 +58,18 @@ do
     local recipe_tweak_entry = {
     }
 
+
+    ---Optionally change certain parts of the game.
+    ---@class OptionalModifications
+    ---Allow sending a fish to space in a Rocket.
+    ---@field can_send_fish_to_space boolean
+    ---Makes Solar Panels and Accumulators 4 times better
+    ---@field stronger_solar boolean
+    ---Allow usage of Productivity Modules in all recipes
+    ---@field productivity_everywhere boolean
+    local optional_modifications = {
+    }
+
     ---Data for configuring the randomizer.
     ---@class LayoutData
     ---Custom tech tree entries
@@ -68,6 +80,8 @@ do
     ---@field custom_recipes RecipeTweakEntry[]
     ---List of technologies to grant automatically on start
     ---@field starting_tech string[]
+    ---Optionally change certain parts of the game.
+    ---@field optional_modifications OptionalModifications
     local layout_data = {
     }
 end
@@ -85,6 +99,13 @@ local function decode_length(blob)
     return blob:unpack("I2")
 end
 
+---Decodes one byte as a boolean
+---@param blob Blob
+---@return boolean
+local function decode_boolean(blob)
+    return blob:byte() == string.char(1)
+end
+
 ---comment
 ---@param blob Blob
 ---@return string
@@ -97,6 +118,17 @@ end
 ---@return string[]
 local function decode_string_array(blob)
     return blob:array(decode_length(blob), decode_string)
+end
+
+---comment
+---@param blob Blob
+---@return OptionalModifications
+local function decode_optional_modifications(blob)
+    return {
+        can_send_fish_to_space = decode_boolean(blob),
+        stronger_solar = decode_boolean(blob),
+        productivity_everywhere = decode_boolean(blob),
+    }
 end
 
 ---comment
@@ -141,7 +173,7 @@ end
 ---@param blob Blob
 ---@return RecipeIngredientEntry
 local function decode_ingredient(blob)
-    local is_fluid = blob:byte() == string.char(1)
+    local is_fluid = decode_boolean(blob)
     return {
         is_fluid = is_fluid,
         name = decode_string(blob),
@@ -183,6 +215,7 @@ local function decode_data(data)
         progressive_data = {},
         custom_recipes = {},
         starting_tech = {},
+        optional_modifications = decode_optional_modifications(blob),
     } --[[@as LayoutData]]
 
     for i = 1, decode_length(blob) do
