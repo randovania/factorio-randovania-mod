@@ -21,5 +21,5 @@ def test_create(test_files: Path, mocker: pytest_mock.MockFixture) -> None:
     result = layout_string.create_string(patch_data)
 
     assert hashlib.sha256(result.encode("ascii")).digest() == (
-        b"\xa9Y\x15@\xdfp\x106&<\xad\xf7ZR\xce4\x0b\xd3\xb8\x83\x8e\xd6\x95\x82X\x84t\xdbt\xe1F\xd0"
+        b"z\x8d\x12\xf6d\xcf\xefaO\x14\x03\xfd\xc1.\xbc\x86c\xe3\xdc\xe2\x8a%\x88N\x84\xe8\x7f3r\xd9Qc"
     )

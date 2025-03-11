@@ -73,6 +73,8 @@ def LayoutDataConstruct():
                         can_send_fish_to_space=construct.Flag,
                         stronger_solar=construct.Flag,
                         productivity_everywhere=construct.Flag,
+                        single_item_freebie=construct.Flag,
+                        strict_multiplayer_freebie=construct.Flag,
                     ),
                     tech_tree=construct.PrefixedArray(Short, TechTreeEntryConstruct),
                     progressive_data=construct.PrefixedArray(
