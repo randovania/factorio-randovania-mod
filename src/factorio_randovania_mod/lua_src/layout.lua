@@ -67,6 +67,10 @@ do
     ---@field stronger_solar boolean
     ---Allow usage of Productivity Modules in all recipes
     ---@field productivity_everywhere boolean
+    ---When set, freebies are always just one item instead of a stack
+    ---@field single_item_freebie boolean
+    ---When set, multiplayer will never generate more freebies due to more players
+    ---@field strict_multiplayer_freebie boolean
     local optional_modifications = {
     }
 
@@ -128,6 +132,8 @@ local function decode_optional_modifications(blob)
         can_send_fish_to_space = decode_boolean(blob),
         stronger_solar = decode_boolean(blob),
         productivity_everywhere = decode_boolean(blob),
+        single_item_freebie = decode_boolean(blob),
+        strict_multiplayer_freebie = decode_boolean(blob),
     }
 end
 

@@ -33,6 +33,16 @@
                     "description": "Allow usage of Productivity Modules in all recipes",
                     "type": "boolean",
                     "default": true
+                },
+                "single_item_freebie": {
+                    "description": "When set, freebies are always just one item instead of a stack",
+                    "type": "boolean",
+                    "default": false
+                },
+                "strict_multiplayer_freebie": {
+                    "description": "When set, multiplayer will never generate more freebies due to more players",
+                    "type": "boolean",
+                    "default": false
                 }
             },
             "default": {},

@@ -22,6 +22,12 @@ class ConfigurationOptionalModifications(typ.TypedDict, total=False):
     productivity_everywhere: bool = True
     """Allow usage of Productivity Modules in all recipes"""
 
+    single_item_freebie: bool = False
+    """When set, freebies are always just one item instead of a stack"""
+
+    strict_multiplayer_freebie: bool = False
+    """When set, multiplayer will never generate more freebies due to more players"""
+
 
 @typ.final
 class ConfigurationTechnologiesItem(typ.TypedDict):
