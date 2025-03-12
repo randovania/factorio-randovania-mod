@@ -19,6 +19,11 @@ def export_mod(config: Configuration, mods_folder: Path) -> tuple[Path, str] | N
     """
     s = layout_string.create_string(config)
     mod_lua_api.add_layout_string_to_mod_settings(s, mods_folder)
+
+    if mods_folder.joinpath(mod_zip.MAIN_MOD_NAME).is_dir():
+        # If there's an extracted mod folder, assume the user knows what they're doing and don't touch
+        return None
+
     mod_zip.create_zip_package(mods_folder)
 
     assets_version = mod_zip.get_minimum_assets_mod_version()
