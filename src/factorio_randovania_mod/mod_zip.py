@@ -49,7 +49,7 @@ def get_minimum_assets_mod_version() -> str:
     """
     info_json = json.loads(_TEMPLATE_PATH.joinpath("info.json").read_text())
 
-    for dependency in typing.cast(list[str], info_json["dependencies"]):
+    for dependency in typing.cast("list[str]", info_json["dependencies"]):
         if dependency.startswith("randovania-assets"):
             version = dependency.split(" >= ")[1]
             return version
