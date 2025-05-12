@@ -103,3 +103,4 @@ class Configuration(typ.TypedDict):
 
     starting_tech: list[str]
     """List of technologies that you start the game with"""
+
