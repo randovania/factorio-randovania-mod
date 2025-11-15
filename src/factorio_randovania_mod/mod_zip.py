@@ -26,7 +26,7 @@ def create_zip_package(output_path: Path) -> None:
 
     folder_name = f"{info_json['name']}_{info_json['version']}"
 
-    with zipfile.ZipFile(output_path.joinpath(folder_name + ".zip"), "w") as target_zip:
+    with zipfile.ZipFile(output_path.joinpath(folder_name + ".zip"), "w", strict_timestamps=False) as target_zip:
         for entry in _TEMPLATE_PATH.rglob("*"):
             assert isinstance(entry, Path)
             relative = entry.relative_to(_TEMPLATE_PATH)
