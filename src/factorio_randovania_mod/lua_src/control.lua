@@ -39,6 +39,7 @@ local k_item_types_with_freebies = {
 ---@return integer
 local function should_give_freebie_for(item_prototype)
     if item_prototype.place_result or item_prototype.place_as_equipment_result or item_prototype.module_effects or k_item_types_with_freebies[item_prototype.type] then
+        if item_prototype.name == "rocket-silo" then return 0 end
         if freebie_full_stack then
             return item_prototype.stack_size
         else
