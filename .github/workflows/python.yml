@@ -33,7 +33,7 @@ jobs:
         run: python -m build
 
       - name: Store the packages
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: python-package-distributions
           path: dist
@@ -146,7 +146,7 @@ jobs:
           echo "version=$(python -c "import factorio_randovania_mod.mod_lua_api; print(factorio_randovania_mod.mod_lua_api.mod_version())")" >> $GITHUB_OUTPUT
 
       - name: Store the Mod Package
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Mod Package
           path: mod-dist
