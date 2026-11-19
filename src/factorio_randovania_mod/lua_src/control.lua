@@ -38,6 +38,7 @@ local k_item_names_without_freebies = {
     ["rocket-silo"] = true,
 }
 
+---Determine if an item should give freebies and in what quantity
 ---@param item_prototype LuaItemPrototype
 ---@return integer
 local function should_give_freebie_for(item_prototype)
